@@ -48,21 +48,21 @@ var Praga = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(Praga.prototype, "Doencas_Transmitidas", {
+    Object.defineProperty(Praga.prototype, "DoencasTransmitidas", {
         set: function (value) {
             this.doencas_Transmitidas = value;
         },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(Praga.prototype, "Tempo_Vida", {
+    Object.defineProperty(Praga.prototype, "TempoVida", {
         set: function (value) {
             this.tempo_Vida = value;
         },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(Praga.prototype, "Modos_Combate", {
+    Object.defineProperty(Praga.prototype, "ModosCombate", {
         set: function (value) {
             this.modos_Combate = value;
         },
@@ -86,6 +86,13 @@ var Contaminacao = /** @class */ (function () {
         this.data_Exterminio = data_Exterminio;
         this.chave = this.GeraChave();
     }
+    Object.defineProperty(Contaminacao.prototype, "Chave", {
+        get: function () {
+            return this.chave;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(Contaminacao.prototype, "Data", {
         set: function (value) {
             this.data = value;
@@ -100,7 +107,7 @@ var Contaminacao = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(Contaminacao.prototype, "Data_Exterminio", {
+    Object.defineProperty(Contaminacao.prototype, "DataExterminio", {
         set: function (value) {
             this.data_Exterminio = value;
         },
@@ -160,6 +167,9 @@ var Admin = /** @class */ (function () {
     Admin.prototype.PragaPorNome = function (Nome) {
         return this.ListaDePragas.filter(function (e) { return e.nome === Nome; })[0];
     };
+    Admin.prototype.ContmPorChave = function (Chave) {
+        return this.ListaDeContms.filter(function (e) { return e.chave === Chave; })[0];
+    };
     Admin.prototype.InsereLocal = function (Local) {
         this.ListaDeLocais.push(Local);
     };
@@ -182,9 +192,14 @@ function Teste() {
     Listas.InsereLocal(new Local("12345-678", 6, 280000, "Blau"));
     Listas.InsereLocal(new Local("12345-679", 6, 280000, "Blau"));
     Listas.InserePraga(new Praga(23, "Mickey", "Laptopspirose", 200, "Fogo"));
-    Listas.InsereContaminacao(new Contaminacao(Listas.LocalPorCEP("12345-678"), Listas.PragaPorCodigo(23), new Date(2020, 2, 23), "Fazer Pizza", new Date(2022, 4, 19)));
+    var cont = new Contaminacao(Listas.LocalPorCEP("12345-678"), Listas.PragaPorCodigo(23), new Date(2020, 2, 23), "Fazer Pizza", new Date(2022, 4, 19));
+    Listas.InsereContaminacao(cont);
     console.log("Local Por CEP: ", Listas.LocalPorCEP("12345-678"));
     console.log("Praga Por Cod: ", Listas.PragaPorCodigo(23));
+    console.log("Contm Por Chave: ", Listas.ContmPorChave(cont.Chave));
+    Listas.ContmPorChave(cont.Chave).DataExterminio = new Date(2022, 9, 20);
+    console.log("Contm Update: ", Listas.ContmPorChave(cont.Chave));
+    Listas.ListaDeContms;
     console.table(Listas.GetLocais);
     console.table(Listas.GetPragas);
     console.table(Listas.GetContaminacoes);

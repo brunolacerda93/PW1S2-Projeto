@@ -49,15 +49,15 @@ class Praga {
         this.nome = value;
     }
 
-    set Doencas_Transmitidas(value: string) {
+    set DoencasTransmitidas(value: string) {
         this.doencas_Transmitidas = value;
     }
 
-    set Tempo_Vida(value: number) {
+    set TempoVida(value: number) {
         this.tempo_Vida = value;
     }
 
-    set Modos_Combate(value: string) {
+    set ModosCombate(value: string) {
         this.modos_Combate = value;
     }
 
@@ -86,6 +86,10 @@ class Contaminacao {
         this.chave = this.GeraChave();
     }
 
+    get Chave() {
+        return this.chave;
+    }
+
     set Data(value: Date) {
         this.data = value;
     }
@@ -94,7 +98,7 @@ class Contaminacao {
         this.acoes = value;
     }
 
-    set Data_Exterminio(value: Date) {
+    set DataExterminio(value: Date) {
         this.data_Exterminio = value;
     }
 
@@ -153,6 +157,10 @@ class Admin {
         return this.ListaDePragas.filter((e: { nome: string; }) => e.nome === Nome)[0];
     }
 
+    ContmPorChave(Chave: string) {
+        return this.ListaDeContms.filter((e: { chave: string; }) => e.chave === Chave)[0];
+    }
+
     InsereLocal(Local: Local) {
         this.ListaDeLocais.push(Local);
     }
@@ -180,10 +188,18 @@ function Teste() {
     Listas.InsereLocal(new Local("12345-678", 6, 280000, "Blau"));
     Listas.InsereLocal(new Local("12345-679", 6, 280000, "Blau"));
     Listas.InserePraga(new Praga(23, "Mickey", "Laptopspirose", 200, "Fogo"));
-    Listas.InsereContaminacao(new Contaminacao(Listas.LocalPorCEP("12345-678"), Listas.PragaPorCodigo(23), new Date(2020, 2, 23), "Fazer Pizza", new Date(2022, 4, 19)));
+
+    const cont: Contaminacao = new Contaminacao(Listas.LocalPorCEP("12345-678"), Listas.PragaPorCodigo(23), new Date(2020, 2, 23), "Fazer Pizza", new Date(2022, 4, 19));
+    Listas.InsereContaminacao(cont);
 
     console.log("Local Por CEP: ", Listas.LocalPorCEP("12345-678"));
     console.log("Praga Por Cod: ", Listas.PragaPorCodigo(23));
+    console.log("Contm Por Chave: ", Listas.ContmPorChave(cont.Chave));
+    
+    Listas.ContmPorChave(cont.Chave).DataExterminio = new Date(2022, 9, 20);
+    console.log("Contm Update: ", Listas.ContmPorChave(cont.Chave));
+
+    Listas.ListaDeContms
 
     console.table(Listas.GetLocais);
     console.table(Listas.GetPragas);

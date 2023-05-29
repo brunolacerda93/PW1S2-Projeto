@@ -77,12 +77,12 @@ class Contaminacao {
     data_Exterminio: Date;
     chave: string;
 
-    constructor(local: Local, praga: Praga, data: Date, acoes: string, data_Exterminio: Date) {
+    constructor(local: Local, praga: Praga, data: Date, acoes?: string, data_Exterminio?: Date) {
         this.local = local;
         this.praga = praga;
         this.data = data;
-        this.acoes = acoes;
-        this.data_Exterminio = data_Exterminio;
+        this.acoes = acoes ?? "";
+        this.data_Exterminio = data_Exterminio ?? new Date(1900, 0, 1);
         this.chave = this.GeraChave();
     }
 
@@ -192,9 +192,15 @@ function Teste() {
     const cont: Contaminacao = new Contaminacao(Listas.LocalPorCEP("12345-678"), Listas.PragaPorCodigo(23), new Date(2020, 2, 23), "Fazer Pizza", new Date(2022, 4, 19));
     Listas.InsereContaminacao(cont);
 
-    console.log("Local Por CEP: ", Listas.LocalPorCEP("12345-678"));
-    console.log("Praga Por Cod: ", Listas.PragaPorCodigo(23));
-    console.log("Contm Por Chave: ", Listas.ContmPorChave(cont.Chave));
+    const loca: Local = Listas.LocalPorCEP("12345-678");
+    const prag: Praga = Listas.PragaPorCodigo(23);
+
+    console.log("Local Por CEP: ", loca);
+    console.log("Praga Por Cod: ", prag);
+
+    const cota: Contaminacao = new Contaminacao(loca, prag, new Date(2020, 2, 23));
+
+    console.log("Contm Por Chave: ", Listas.ContmPorChave(cota.Chave));
     
     Listas.ContmPorChave(cont.Chave).DataExterminio = new Date(2022, 9, 20);
     console.log("Contm Update: ", Listas.ContmPorChave(cont.Chave));

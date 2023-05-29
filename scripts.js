@@ -82,8 +82,8 @@ var Contaminacao = /** @class */ (function () {
         this.local = local;
         this.praga = praga;
         this.data = data;
-        this.acoes = acoes;
-        this.data_Exterminio = data_Exterminio;
+        this.acoes = acoes !== null && acoes !== void 0 ? acoes : "";
+        this.data_Exterminio = data_Exterminio !== null && data_Exterminio !== void 0 ? data_Exterminio : new Date(1900, 0, 1);
         this.chave = this.GeraChave();
     }
     Object.defineProperty(Contaminacao.prototype, "Chave", {
@@ -194,9 +194,12 @@ function Teste() {
     Listas.InserePraga(new Praga(23, "Mickey", "Laptopspirose", 200, "Fogo"));
     var cont = new Contaminacao(Listas.LocalPorCEP("12345-678"), Listas.PragaPorCodigo(23), new Date(2020, 2, 23), "Fazer Pizza", new Date(2022, 4, 19));
     Listas.InsereContaminacao(cont);
-    console.log("Local Por CEP: ", Listas.LocalPorCEP("12345-678"));
-    console.log("Praga Por Cod: ", Listas.PragaPorCodigo(23));
-    console.log("Contm Por Chave: ", Listas.ContmPorChave(cont.Chave));
+    var loca = Listas.LocalPorCEP("12345-678");
+    var prag = Listas.PragaPorCodigo(23);
+    console.log("Local Por CEP: ", loca);
+    console.log("Praga Por Cod: ", prag);
+    var cota = new Contaminacao(loca, prag, new Date(2020, 2, 23));
+    console.log("Contm Por Chave: ", Listas.ContmPorChave(cota.Chave));
     Listas.ContmPorChave(cont.Chave).DataExterminio = new Date(2022, 9, 20);
     console.log("Contm Update: ", Listas.ContmPorChave(cont.Chave));
     Listas.ListaDeContms;

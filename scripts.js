@@ -187,8 +187,8 @@ var Admin = /** @class */ (function () {
     };
     return Admin;
 }());
+var Listas = new Admin();
 function Teste() {
-    var Listas = new Admin();
     Listas.InsereLocal(new Local("12345-678", 6, 280000, "Blau"));
     Listas.InsereLocal(new Local("12345-679", 6, 280000, "Blau"));
     Listas.InserePraga(new Praga(23, "Mickey", "Laptopspirose", 200, "Fogo"));

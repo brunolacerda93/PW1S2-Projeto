@@ -182,8 +182,9 @@ class Admin {
     }
 }
 
+let Listas = new Admin();
+
 function Teste() {
-    let Listas = new Admin();
 
     Listas.InsereLocal(new Local("12345-678", 6, 280000, "Blau"));
     Listas.InsereLocal(new Local("12345-679", 6, 280000, "Blau"));

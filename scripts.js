@@ -247,4 +247,10 @@ function Teste() {
     // Listas.RemoveLocal(Listas.LocalPorCEP("12345-679"));
     // console.table(Listas.GetLocais);
 }
+function ListarUmLocal() {
+    var test = document.getElementById("cep-lista-um");
+    console.log(test);
+    var temp = Listas.LocalPorCEP(test.value);
+    console.log(temp);
+}
 //# sourceMappingURL=scripts.js.map

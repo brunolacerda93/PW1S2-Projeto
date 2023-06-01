@@ -247,3 +247,10 @@ function Teste() {
     // Listas.RemoveLocal(Listas.LocalPorCEP("12345-679"));
     // console.table(Listas.GetLocais);
 }
+
+function ListarUmLocal() {
+    let test = document.getElementById("cep-lista-um") as HTMLInputElement;
+    console.log(test);
+    let temp = Listas.LocalPorCEP(test.value);
+    console.log(temp);
+}

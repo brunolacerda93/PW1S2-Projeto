@@ -53,6 +53,10 @@ class Praga {
         return this.codigo;
     }
 
+    get Nome() {
+        return this.nome;
+    }
+
     set Nome(value: string) {
         this.nome = value;
     }
@@ -114,11 +118,12 @@ class Contaminacao {
         this.data = data;
         this.acoes = acoes;
         this.data_Exterminio = data_Exterminio;
+        this.chave = this.GeraChave();
     }
 
     GeraChave(): string {
         let chave: string = "";
-        return chave.concat(this.local.CEP, '-', this.praga.codigo.toString(), '-', this.data.toString());
+        return chave.concat(this.local.cep, '-', this.praga.codigo.toString(), '-', this.data.toString());
     }
 }
 
@@ -128,9 +133,9 @@ class Admin {
     ListaDeContms: Array<Contaminacao>;
 
     constructor() {
-        this.ListaDeLocais = new Array<Local>;
-        this.ListaDePragas = new Array<Praga>;
-        this.ListaDeContms = new Array<Contaminacao>;
+        this.ListaDeLocais = JSON.parse(localStorage.getItem("lista-locais")) ?? new Array<Local>;
+        this.ListaDePragas = JSON.parse(localStorage.getItem("lista-pragas")) ?? new Array<Praga>;
+        this.ListaDeContms = JSON.parse(localStorage.getItem("lista-contms")) ?? new Array<Contaminacao>;
     }
 
     get GetLocais() {
@@ -153,20 +158,20 @@ class Admin {
         }
     }
 
-    LocalPorCEP(CEP: string) {
-        return this.ListaDeLocais.filter((e: { CEP: string; }) => e.CEP === CEP)[0];
+    LocalPorCEP(Cep: string) {
+        return this.ListaDeLocais.filter((e: Local) => e.cep == Cep)[0];
     }
 
-    PragaPorCodigo(Codigo: number) {
-        return this.ListaDePragas.filter((e: { codigo: number; }) => e.codigo === Codigo)[0];
+    PragaPorCodigo(codigo: number) {
+        return this.ListaDePragas.filter((e: Praga) => e.codigo == codigo)[0];
     }
 
-    PragaPorNome(Nome: string) {
-        return this.ListaDePragas.filter((e: { nome: string; }) => e.nome === Nome)[0];
+    PragaPorNome(nome: string) {
+        return this.ListaDePragas.filter((e: Praga) => e.nome == nome)[0];
     }
 
-    ContmPorChave(Chave: string) {
-        return this.ListaDeContms.filter((e: { chave: string; }) => e.chave === Chave)[0];
+    ContmPorChave(chave: string) {
+        return this.ListaDeContms.filter((e: Contaminacao) => e.chave == chave)[0];
     }
 
     InsereLocal(Local: Local) {
@@ -175,6 +180,7 @@ class Admin {
             return;
         }
         this.ListaDeLocais.push(Local);
+        localStorage.setItem("lista-locais", JSON.stringify(this.ListaDeLocais));
     }
 
     InserePraga(Praga: Praga) {
@@ -183,6 +189,7 @@ class Admin {
             return;
         }
         this.ListaDePragas.push(Praga);
+        localStorage.setItem("lista-pragas", JSON.stringify(this.ListaDePragas));
     }
 
     InsereContaminacao(Contaminacao: Contaminacao) {
@@ -191,49 +198,52 @@ class Admin {
             return;
         }
         this.ListaDeContms.push(Contaminacao);
+        localStorage.setItem("lista-contms", JSON.stringify(this.ListaDeContms));
     }
 
     RemoveLocal(Local: Local) {
         this.ListaDeLocais.splice(this.ListaDeLocais.indexOf(Local), 1);
+        localStorage.setItem("lista-locais", JSON.stringify(this.ListaDeLocais));
     }
 
     RemovePraga(Praga: Praga) {
         this.ListaDePragas.splice(this.ListaDePragas.indexOf(Praga), 1);
+        localStorage.setItem("lista-pragas", JSON.stringify(this.ListaDePragas));
     }
 
     RemoveContm(Contaminacao: Contaminacao) {
         this.ListaDeContms.splice(this.ListaDeContms.indexOf(Contaminacao), 1);
+        localStorage.setItem("lista-contms", JSON.stringify(this.ListaDeContms));
     }
 }
 
 let Listas = new Admin();
 
-Listas.InsereLocal(new Local("12345-678", 6, 280000, "Blau"));
+Listas.InsereLocal(new Local("12345-678", 36, 280000, "Blau"));
 Listas.InserePraga(new Praga(23, "Mickey", "Laptopspirose", 200, "Fogo"));
-
 Listas.InsereContaminacao(new Contaminacao(Listas.LocalPorCEP("12345-678"), Listas.PragaPorCodigo(23), new Date(2020, 2, 23), "Fazer Pizza", new Date(2022, 4, 19)));
 
 function Teste() {
-
+    
     Listas.InsereLocal(new Local("12345-679", 6, 280000, "Blau"));
-
+    
     const loca: Local = Listas.LocalPorCEP("12345-678");
     const prag: Praga = Listas.PragaPorCodigo(23);
-
+    
     console.log("Local Por CEP: ", loca);
     console.log("Praga Por Cod: ", prag);
-
+    
     const cont: Contaminacao = new Contaminacao(loca, prag, new Date(2020, 2, 23));
-
+    
     console.log("Contm Por Chave: ", Listas.ContmPorChave(cont.Chave));
     
     Listas.ContmPorChave(cont.Chave).DataExterminio = new Date(2022, 9, 20);
     console.log("Contm Update: ", Listas.ContmPorChave(cont.Chave));
-
+    
     console.table(Listas.GetLocais);
     console.table(Listas.GetPragas);
     console.table(Listas.GetContaminacoes);
     
-    Listas.RemoveLocal(Listas.LocalPorCEP("12345-678"));
-    console.table(Listas.GetLocais);
+    // Listas.RemoveLocal(Listas.LocalPorCEP("12345-679"));
+    // console.table(Listas.GetLocais);
 }

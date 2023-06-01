@@ -56,6 +56,9 @@ var Praga = /** @class */ (function () {
         configurable: true
     });
     Object.defineProperty(Praga.prototype, "Nome", {
+        get: function () {
+            return this.nome;
+        },
         set: function (value) {
             this.nome = value;
         },
@@ -132,18 +135,20 @@ var Contaminacao = /** @class */ (function () {
         this.data = data;
         this.acoes = acoes;
         this.data_Exterminio = data_Exterminio;
+        this.chave = this.GeraChave();
     };
     Contaminacao.prototype.GeraChave = function () {
         var chave = "";
-        return chave.concat(this.local.CEP, '-', this.praga.codigo.toString(), '-', this.data.toString());
+        return chave.concat(this.local.cep, '-', this.praga.codigo.toString(), '-', this.data.toString());
     };
     return Contaminacao;
 }());
 var Admin = /** @class */ (function () {
     function Admin() {
-        this.ListaDeLocais = new Array;
-        this.ListaDePragas = new Array;
-        this.ListaDeContms = new Array;
+        var _a, _b, _c;
+        this.ListaDeLocais = (_a = JSON.parse(localStorage.getItem("lista-locais"))) !== null && _a !== void 0 ? _a : new Array;
+        this.ListaDePragas = (_b = JSON.parse(localStorage.getItem("lista-pragas"))) !== null && _b !== void 0 ? _b : new Array;
+        this.ListaDeContms = (_c = JSON.parse(localStorage.getItem("lista-contms"))) !== null && _c !== void 0 ? _c : new Array;
     }
     Object.defineProperty(Admin.prototype, "GetLocais", {
         get: function () {
@@ -172,17 +177,17 @@ var Admin = /** @class */ (function () {
             console.log(Lista[e]);
         }
     };
-    Admin.prototype.LocalPorCEP = function (CEP) {
-        return this.ListaDeLocais.filter(function (e) { return e.CEP === CEP; })[0];
+    Admin.prototype.LocalPorCEP = function (Cep) {
+        return this.ListaDeLocais.filter(function (e) { return e.cep == Cep; })[0];
     };
-    Admin.prototype.PragaPorCodigo = function (Codigo) {
-        return this.ListaDePragas.filter(function (e) { return e.codigo === Codigo; })[0];
+    Admin.prototype.PragaPorCodigo = function (codigo) {
+        return this.ListaDePragas.filter(function (e) { return e.codigo == codigo; })[0];
     };
-    Admin.prototype.PragaPorNome = function (Nome) {
-        return this.ListaDePragas.filter(function (e) { return e.nome === Nome; })[0];
+    Admin.prototype.PragaPorNome = function (nome) {
+        return this.ListaDePragas.filter(function (e) { return e.nome == nome; })[0];
     };
-    Admin.prototype.ContmPorChave = function (Chave) {
-        return this.ListaDeContms.filter(function (e) { return e.chave === Chave; })[0];
+    Admin.prototype.ContmPorChave = function (chave) {
+        return this.ListaDeContms.filter(function (e) { return e.chave == chave; })[0];
     };
     Admin.prototype.InsereLocal = function (Local) {
         if (this.LocalPorCEP(Local.CEP)) {
@@ -190,6 +195,7 @@ var Admin = /** @class */ (function () {
             return;
         }
         this.ListaDeLocais.push(Local);
+        localStorage.setItem("lista-locais", JSON.stringify(this.ListaDeLocais));
     };
     Admin.prototype.InserePraga = function (Praga) {
         if (this.PragaPorCodigo(Praga.Codigo)) {
@@ -197,6 +203,7 @@ var Admin = /** @class */ (function () {
             return;
         }
         this.ListaDePragas.push(Praga);
+        localStorage.setItem("lista-pragas", JSON.stringify(this.ListaDePragas));
     };
     Admin.prototype.InsereContaminacao = function (Contaminacao) {
         if (this.ContmPorChave(Contaminacao.Chave)) {
@@ -204,20 +211,24 @@ var Admin = /** @class */ (function () {
             return;
         }
         this.ListaDeContms.push(Contaminacao);
+        localStorage.setItem("lista-contms", JSON.stringify(this.ListaDeContms));
     };
     Admin.prototype.RemoveLocal = function (Local) {
         this.ListaDeLocais.splice(this.ListaDeLocais.indexOf(Local), 1);
+        localStorage.setItem("lista-locais", JSON.stringify(this.ListaDeLocais));
     };
     Admin.prototype.RemovePraga = function (Praga) {
         this.ListaDePragas.splice(this.ListaDePragas.indexOf(Praga), 1);
+        localStorage.setItem("lista-pragas", JSON.stringify(this.ListaDePragas));
     };
     Admin.prototype.RemoveContm = function (Contaminacao) {
         this.ListaDeContms.splice(this.ListaDeContms.indexOf(Contaminacao), 1);
+        localStorage.setItem("lista-contms", JSON.stringify(this.ListaDeContms));
     };
     return Admin;
 }());
 var Listas = new Admin();
-Listas.InsereLocal(new Local("12345-678", 6, 280000, "Blau"));
+Listas.InsereLocal(new Local("12345-678", 36, 280000, "Blau"));
 Listas.InserePraga(new Praga(23, "Mickey", "Laptopspirose", 200, "Fogo"));
 Listas.InsereContaminacao(new Contaminacao(Listas.LocalPorCEP("12345-678"), Listas.PragaPorCodigo(23), new Date(2020, 2, 23), "Fazer Pizza", new Date(2022, 4, 19)));
 function Teste() {
@@ -233,7 +244,7 @@ function Teste() {
     console.table(Listas.GetLocais);
     console.table(Listas.GetPragas);
     console.table(Listas.GetContaminacoes);
-    Listas.RemoveLocal(Listas.LocalPorCEP("12345-678"));
-    console.table(Listas.GetLocais);
+    // Listas.RemoveLocal(Listas.LocalPorCEP("12345-679"));
+    // console.table(Listas.GetLocais);
 }
 //# sourceMappingURL=scripts.js.map

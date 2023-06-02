@@ -123,7 +123,7 @@ class Admin {
 
 let Listas = new Admin();
 
-localStorage.clear();
+//localStorage.clear();
 
 Listas.InsereLocal(new Local("12345-678", 36, 280000, "Blau"));
 Listas.InserePraga(new Praga(23, "Mickey", "Laptopspirose", 200, "Fogo"));
@@ -205,4 +205,40 @@ function ListarTodosLocais() {
         p.innerHTML = LocalToHTML(lista[i]);
         place?.appendChild(p);
     }
+}
+
+function IncluirLocal() {
+    const cep = (document.getElementById("cep-local") as HTMLInputElement).value;
+    const rai = (document.getElementById("rai-local") as HTMLInputElement).value;
+    const pop = (document.getElementById("pop-local") as HTMLInputElement).value;
+    const det = (document.getElementById("det-local") as HTMLInputElement).value;
+
+    if (cep == "" || +rai == 0 || +pop == 0) return;
+    
+    Listas.InsereLocal(new Local(cep, +rai, +pop, det));
+}
+
+function AlterarLocal() {
+    const cep = (document.getElementById("cep-local-e") as HTMLInputElement).value;
+    const rai = (document.getElementById("rai-local-e") as HTMLInputElement).value;
+    const pop = (document.getElementById("pop-local-e") as HTMLInputElement).value;
+    const det = (document.getElementById("det-local-e") as HTMLInputElement).value;
+
+    if (cep == "") return;
+
+    const local: Local = Listas.LocalPorCEP(cep);
+
+    if (rai != "") {
+        local.raio = +rai;
+    }
+
+    if (pop != "") {
+        local.populacao = +pop;
+    }
+
+    if (det != "") {
+        local.detalhes = det;
+    }
+
+    localStorage.setItem("lista-locais", JSON.stringify(Listas.ListaDeLocais));
 }

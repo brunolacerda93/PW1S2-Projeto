@@ -25,28 +25,68 @@
         <section id="listar_um">
           <h2>Listar um</h2>
           <label for="cep-lista-um">CEP</label>
-          <input id="cep-lista-um" type="text">
+          <input id="cep-lista-um" type="text" />
           <button onclick="ListarUmLocal()">Buscar</button>
         </section>
 
         <section id="listar_todos">
-          <h2>Listar Todos  <button onclick="ListarTodosLocais()">Listar</button></h2>
+          <h2>
+            Listar Todos <button onclick="ListarTodosLocais()">Listar</button>
+          </h2>
         </section>
 
         <section id="incluir">
           <h2>Incluir</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            auctor purus vel massa lacinia, ut sodales arcu viverra.
-          </p>
+          <form>
+            <div class="form-row">
+              <label for="cep-local">CEP:</label>
+              <input type="text" id="cep-local" name="cep-local" required />
+            </div>
+
+            <div class="form-row">
+              <label for="rai-local">Raio:</label>
+              <input type="number" id="rai-local" name="rai-local" required />
+            </div>
+
+            <div class="form-row">
+              <label for="pop-local">População:</label>
+              <input type="number" id="pop-local" name="pop-local" required />
+            </div>
+
+            <div class="form-row">
+              <label for="det-local">Detalhes:</label>
+              <textarea id="det-local" name="det-local"></textarea>
+            </div>
+
+            <button onclick="IncluirLocal()">Submit</button>
+          </form>
         </section>
 
         <section id="alterar">
           <h2>Alterar</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            auctor purus vel massa lacinia, ut sodales arcu viverra.
-          </p>
+          <form>
+            <div class="form-row">
+              <label for="cep-local-e">CEP:</label>
+              <input type="text" id="cep-local-e" name="cep-local-e" required />
+            </div>
+
+            <div class="form-row">
+              <label for="rai-local-e">Raio:</label>
+              <input type="number" id="rai-local-e" name="rai-local-e" />
+            </div>
+
+            <div class="form-row">
+              <label for="pop-local-e">População:</label>
+              <input type="number" id="pop-local-e" name="pop-local-e" />
+            </div>
+
+            <div class="form-row">
+              <label for="det-local-e">Detalhes:</label>
+              <textarea id="det-local-e" name="det-local-e"></textarea>
+            </div>
+
+            <button onclick="AlterarLocal()">Alterar</button>
+          </form>
         </section>
 
         <section id="remover">

@@ -90,7 +90,7 @@ var Admin = /** @class */ (function () {
     return Admin;
 }());
 var Listas = new Admin();
-localStorage.clear();
+//localStorage.clear();
 Listas.InsereLocal(new Local("12345-678", 36, 280000, "Blau"));
 Listas.InserePraga(new Praga(23, "Mickey", "Laptopspirose", 200, "Fogo"));
 Listas.InsereContaminacao(new Contaminacao(Listas.LocalPorCEP("12345-678"), Listas.PragaPorCodigo(23), new Date(2020, 2, 23), "Fazer Pizza", new Date(2022, 4, 19)));
@@ -147,5 +147,33 @@ function ListarTodosLocais() {
         p.innerHTML = LocalToHTML(lista[i]);
         place === null || place === void 0 ? void 0 : place.appendChild(p);
     }
+}
+function IncluirLocal() {
+    var cep = document.getElementById("cep-local").value;
+    var rai = document.getElementById("rai-local").value;
+    var pop = document.getElementById("pop-local").value;
+    var det = document.getElementById("det-local").value;
+    if (cep == "" || +rai == 0 || +pop == 0)
+        return;
+    Listas.InsereLocal(new Local(cep, +rai, +pop, det));
+}
+function AlterarLocal() {
+    var cep = document.getElementById("cep-local-e").value;
+    var rai = document.getElementById("rai-local-e").value;
+    var pop = document.getElementById("pop-local-e").value;
+    var det = document.getElementById("det-local-e").value;
+    if (cep == "")
+        return;
+    var local = Listas.LocalPorCEP(cep);
+    if (rai != "") {
+        local.raio = +rai;
+    }
+    if (pop != "") {
+        local.populacao = +pop;
+    }
+    if (det != "") {
+        local.detalhes = det;
+    }
+    localStorage.setItem("lista-locais", JSON.stringify(Listas.ListaDeLocais));
 }
 //# sourceMappingURL=scripts.js.map

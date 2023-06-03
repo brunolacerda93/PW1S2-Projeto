@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pragas</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <header>
+      <h1>Epidemology Control Centre</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html">About</a></li>
+          <li><a href="index.html">Services</a></li>
+          <li><a href="locais.html">Locais</a></li>
+          <li><a href="pragas.html">Pragas</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <div class="">
+        <section id="listar_uma">
+          <h2>Listar uma</h2>
+          <label for="cod-lista-uma">Código</label>
+          <input id="cod-lista-uma" type="text" />
+          <button onclick="ListarUmaPraga()">Buscar</button>
+        </section>
+
+        <section id="listar_todas">
+          <h2>
+            Listar Todas <button onclick="ListarTodasPragas()">Listar</button>
+          </h2>
+        </section>
+
+        <section id="incluir">
+          <h2>Incluir</h2>
+          <form>
+            <div class="form-row">
+              <label for="cod-praga">Código:</label>
+              <input type="number" id="cod-praga" name="cod-praga" required />
+            </div>
+
+            <div class="form-row">
+              <label for="nom-praga">Nome:</label>
+              <input type="text" id="nom-praga" name="nom-praga" required />
+            </div>
+
+            <div class="form-row">
+              <label for="dot-praga">Doenças transmitidas:</label>
+              <textarea id="dot-praga" name="dot-praga" required></textarea>
+            </div>
+
+            <div class="form-row">
+              <label for="tev-praga">Tempo de Vida:</label>
+              <input type="number" id="tev-praga" nome="tev-praga" required />
+            </div>
+
+            <div class="form-row">
+              <label for="moc-praga">Modos de Combate:</label>
+              <textarea id="moc-praga" name="moc-praga" required></textarea>
+            </div>
+
+            <button onclick="IncluirPraga()">Submit</button>
+          </form>
+        </section>
+
+        <section id="alterar">
+          <h2>Alterar</h2>
+          <form>
+            <div class="form-row">
+              <label for="cod-praga-e">Código:</label>
+              <input
+                type="number"
+                id="cod-praga-e"
+                name="cod-praga-e"
+                required
+              />
+            </div>
+
+            <div class="form-row">
+              <label for="nom-praga-e">Nome:</label>
+              <input type="text" id="nom-praga-e" name="nom-praga-e" />
+            </div>
+
+            <div class="form-row">
+              <label for="dot-praga-e">Doenças transmitidas:</label>
+              <textarea id="dot-praga-e" name="dot-praga-e"></textarea>
+            </div>
+
+            <div class="form-row">
+              <label for="tev-praga-e">Tempo de Vida:</label>
+              <input type="number" id="tev-praga-e" nome="tev-praga-e" />
+            </div>
+
+            <div class="form-row">
+              <label for="moc-praga-e">Modos de Combate:</label>
+              <textarea id="moc-praga-e" name="moc-praga-e"></textarea>
+            </div>
+
+            <button onclick="AlterarPraga()">Submit</button>
+          </form>
+        </section>
+
+        <section id="remover">
+          <h2>Remover</h2>
+          <label for="cod-praga-rem">Código</label>
+          <input id="cod-praga-rem" type="number" />
+          <button onclick="RemoverPraga()">Buscar</button>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <section id="contact">
+        <h2>Contact Us</h2>
+        <p>
+          For inquiries or assistance, please reach out to us using the
+          information below:
+        </p>
+        <address>
+          Epidemiology Control Centre<br />
+          123 Main Street<br />
+          City, State ZIP<br />
+          Phone: (12) 3456-7890<br />
+          Email: info@epicentre.com
+        </address>
+      </section>
+      <p>&copy; 2023 Epidemiology Control Centre. All rights reserved.</p>
+    </footer>
+    <script src="scripts.js"></script>
+  </body>
+</html>

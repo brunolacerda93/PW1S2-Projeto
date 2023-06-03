@@ -8,12 +8,12 @@ var Local = /** @class */ (function () {
     return Local;
 }());
 var Praga = /** @class */ (function () {
-    function Praga(codigo, nome, doencas_Transmitidas, tempo_Vida, modos_Combate) {
+    function Praga(codigo, nome, doencasTransmitidas, tempoVida, modosCombate) {
         this.codigo = codigo;
         this.nome = nome;
-        this.doencas_Transmitidas = doencas_Transmitidas;
-        this.tempo_Vida = tempo_Vida;
-        this.modos_Combate = modos_Combate;
+        this.doencasTransmitidas = doencasTransmitidas;
+        this.tempoVida = tempoVida;
+        this.modosCombate = modosCombate;
     }
     return Praga;
 }());
@@ -24,12 +24,8 @@ var Contaminacao = /** @class */ (function () {
         this.data = data;
         this.acoes = acoes !== null && acoes !== void 0 ? acoes : "";
         this.dataExterminio = dataExterminio !== null && dataExterminio !== void 0 ? dataExterminio : new Date(1900, 0, 1);
-        this.chave = this.GeraChave();
+        this.chave = "".concat(this.local.cep, '-', this.praga.codigo.toString(), '-', this.data.toString());
     }
-    Contaminacao.prototype.GeraChave = function () {
-        var chave = "";
-        return chave.concat(this.local.cep, '-', this.praga.codigo.toString(), '-', this.data.toString());
-    };
     return Contaminacao;
 }());
 var Admin = /** @class */ (function () {
@@ -107,22 +103,22 @@ function Teste() {
     console.table(Listas.ListaDeLocais);
     console.table(Listas.ListaDePragas);
     console.table(Listas.ListaDeContms);
-    // Listas.RemoveLocal(Listas.LocalPorCEP("12345-679"));
-    // console.table(Listas.GetLocais);
 }
 function ListarUmLocal() {
     var place = document.getElementById("listar_um");
-    var input = document.getElementById("cep-lista-um");
-    var foo = document.getElementById("lista-um-child");
-    var local = Listas.LocalPorCEP(input.value);
+    var child = document.getElementById("lista-um-child");
+    var cep = document.getElementById("cep-lista-um").value;
+    if (cep == "")
+        return;
+    var local = Listas.LocalPorCEP(cep);
     if (!local) {
-        if (foo) {
+        if (child) {
             place === null || place === void 0 ? void 0 : place.removeChild(document.getElementById("lista-um-child"));
         }
         return;
     }
-    if (foo) {
-        foo.innerHTML = LocalToHTML(local);
+    if (child) {
+        child.innerHTML = LocalToHTML(local);
         return;
     }
     var p = document.createElement("p");
@@ -175,5 +171,172 @@ function AlterarLocal() {
         local.detalhes = det;
     }
     localStorage.setItem("lista-locais", JSON.stringify(Listas.ListaDeLocais));
+}
+function RemoverLocal() {
+    var place = document.getElementById("remover");
+    var child = document.getElementById("lista-rem-child");
+    var cchil = document.getElementById("rem-conf");
+    var cep = document.getElementById("cep-lista-rem").value;
+    if (cep == "")
+        return;
+    var local = Listas.LocalPorCEP(cep);
+    if (!local) {
+        if (child) {
+            place === null || place === void 0 ? void 0 : place.removeChild(child);
+            place === null || place === void 0 ? void 0 : place.removeChild(cchil);
+        }
+        return;
+    }
+    if (child) {
+        child.innerHTML = LocalToHTML(local);
+        return;
+    }
+    var p = document.createElement("p");
+    p.setAttribute("id", "lista-rem-child");
+    p.innerHTML = LocalToHTML(local);
+    place === null || place === void 0 ? void 0 : place.appendChild(p);
+    var c = document.createElement("p");
+    c.setAttribute("id", "rem-conf");
+    c.innerHTML = "<p>Tem certeza?</p>";
+    place === null || place === void 0 ? void 0 : place.append(c);
+    var botaoSim = document.createElement("button");
+    var botaoNao = document.createElement("button");
+    botaoSim.innerHTML = "Sim";
+    botaoSim.onclick = function () {
+        Listas.RemoveLocal(Listas.LocalPorCEP(cep));
+        var d = document.createElement("p");
+        d.innerHTML = "<p>Removido!</p>";
+        place === null || place === void 0 ? void 0 : place.append(d);
+        setTimeout(function () { place === null || place === void 0 ? void 0 : place.removeChild(d); botaoNao.click(); }, 3500);
+    };
+    botaoNao.innerHTML = "Não";
+    botaoNao.onclick = function () {
+        place === null || place === void 0 ? void 0 : place.removeChild(p);
+        place === null || place === void 0 ? void 0 : place.removeChild(c);
+        place === null || place === void 0 ? void 0 : place.removeChild(botaoSim);
+        place === null || place === void 0 ? void 0 : place.removeChild(botaoNao);
+    };
+    place === null || place === void 0 ? void 0 : place.append(botaoSim);
+    place === null || place === void 0 ? void 0 : place.append(botaoNao);
+}
+function ListarUmaPraga() {
+    var place = document.getElementById("listar_uma");
+    var child = document.getElementById("lista-uma-child");
+    var cod = document.getElementById("cod-lista-uma").value;
+    if (cod == "")
+        return;
+    var praga = Listas.PragaPorCodigo(+cod);
+    if (!praga) {
+        if (child) {
+            place === null || place === void 0 ? void 0 : place.removeChild(document.getElementById("lista-uma-child"));
+        }
+        return;
+    }
+    if (child) {
+        child.innerHTML = PragaToHTML(praga);
+        return;
+    }
+    var p = document.createElement("p");
+    p.setAttribute("id", "lista-uma-child");
+    p.innerHTML = PragaToHTML(praga);
+    place === null || place === void 0 ? void 0 : place.appendChild(p);
+}
+function PragaToHTML(praga) {
+    var str = "";
+    return str.concat("<p>Código: ", praga.codigo.toString(), "<br>Nome: ", praga.nome, "<br>Doenças Transmitidas: ", praga.doencasTransmitidas, "<br>Tempo de Vida: ", praga.tempoVida.toString(), " anos", "<br>Modos de Combate: ", praga.modosCombate, "</p>");
+}
+function ListarTodasPragas() {
+    var place = document.getElementById("listar_todas");
+    var lista = Listas.ListaDePragas;
+    var index;
+    for (var i = 0; i < lista.length; i++) {
+        index = "lista-todos-child-".concat(i.toString());
+        if (document.getElementById(index))
+            break;
+        var p = document.createElement("p");
+        p.setAttribute("id", index);
+        p.innerHTML = PragaToHTML(lista[i]);
+        place === null || place === void 0 ? void 0 : place.appendChild(p);
+    }
+}
+function IncluirPraga() {
+    var cod = document.getElementById("cod-praga").value;
+    var nom = document.getElementById("nom-praga").value;
+    var dot = document.getElementById("dot-praga").value;
+    var tev = document.getElementById("tev-praga").value;
+    var moc = document.getElementById("moc-praga").value;
+    if (+cod == 0 || nom == "" || dot == "" || +tev == 0 || moc == "")
+        return;
+    Listas.InserePraga(new Praga(+cod, nom, dot, +tev, moc));
+}
+function AlterarPraga() {
+    var cod = document.getElementById("cod-praga-e").value;
+    var nom = document.getElementById("nom-praga-e").value;
+    var dot = document.getElementById("dot-praga-e").value;
+    var tev = document.getElementById("tev-praga-e").value;
+    var moc = document.getElementById("moc-praga-e").value;
+    if (+cod == 0)
+        return;
+    var praga = Listas.PragaPorCodigo(+cod);
+    if (nom != "") {
+        praga.nome = nom;
+    }
+    if (dot != "") {
+        praga.doencasTransmitidas = dot;
+    }
+    if (+tev != 0) {
+        praga.tempoVida = +tev;
+    }
+    if (moc != "") {
+        praga.modosCombate = moc;
+    }
+    localStorage.setItem("lista-pragas", JSON.stringify(Listas.ListaDePragas));
+}
+function RemoverPraga() {
+    var place = document.getElementById("remover");
+    var child = document.getElementById("lista-rem-child");
+    var cchil = document.getElementById("rem-conf");
+    var cod = document.getElementById("cod-praga-rem").value;
+    if (cod == "")
+        return;
+    var praga = Listas.PragaPorCodigo(+cod);
+    if (!praga) {
+        if (child) {
+            place === null || place === void 0 ? void 0 : place.removeChild(child);
+            place === null || place === void 0 ? void 0 : place.removeChild(cchil);
+        }
+        return;
+    }
+    if (child) {
+        child.innerHTML = PragaToHTML(praga);
+        return;
+    }
+    var p = document.createElement("p");
+    p.setAttribute("id", "lista-rem-child");
+    p.innerHTML = PragaToHTML(praga);
+    place === null || place === void 0 ? void 0 : place.appendChild(p);
+    var c = document.createElement("p");
+    c.setAttribute("id", "rem-conf");
+    c.innerHTML = "<p>Tem certeza?</p>";
+    place === null || place === void 0 ? void 0 : place.append(c);
+    var botaoSim = document.createElement("button");
+    var botaoNao = document.createElement("button");
+    botaoSim.innerHTML = "Sim";
+    botaoSim.onclick = function () {
+        Listas.RemovePraga(Listas.PragaPorCodigo(+cod));
+        var d = document.createElement("p");
+        d.innerHTML = "<p>Removido!</p>";
+        place === null || place === void 0 ? void 0 : place.append(d);
+        setTimeout(function () { place === null || place === void 0 ? void 0 : place.removeChild(d); botaoNao.click(); }, 3500);
+    };
+    botaoNao.innerHTML = "Não";
+    botaoNao.onclick = function () {
+        place === null || place === void 0 ? void 0 : place.removeChild(p);
+        place === null || place === void 0 ? void 0 : place.removeChild(c);
+        place === null || place === void 0 ? void 0 : place.removeChild(botaoSim);
+        place === null || place === void 0 ? void 0 : place.removeChild(botaoNao);
+    };
+    place === null || place === void 0 ? void 0 : place.append(botaoSim);
+    place === null || place === void 0 ? void 0 : place.append(botaoNao);
 }
 //# sourceMappingURL=scripts.js.map

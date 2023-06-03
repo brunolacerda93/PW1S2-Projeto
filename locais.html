@@ -6,16 +6,17 @@
     <title>Locais</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
+
   <body>
     <header>
-      <h1>Epidemiology Control Centre</h1>
+      <h1>Epidemology Control Centre</h1>
       <nav>
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="index.html">About</a></li>
           <li><a href="index.html">Services</a></li>
-          <li><a href="index.html">Contact</a></li>
           <li><a href="locais.html">Locais</a></li>
+          <li><a href="pragas.html">Pragas</a></li>
         </ul>
       </nav>
     </header>
@@ -91,10 +92,9 @@
 
         <section id="remover">
           <h2>Remover</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            auctor purus vel massa lacinia, ut sodales arcu viverra.
-          </p>
+          <label for="cep-lista-rem">CEP</label>
+          <input id="cep-lista-rem" type="text" />
+          <button onclick="RemoverLocal()">Buscar</button>
         </section>
       </div>
     </main>

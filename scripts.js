@@ -24,16 +24,19 @@ var Contaminacao = /** @class */ (function () {
         this.data = data;
         this.acoes = acoes !== null && acoes !== void 0 ? acoes : "";
         this.dataExterminio = dataExterminio !== null && dataExterminio !== void 0 ? dataExterminio : new Date(1900, 0, 1);
-        this.chave = "".concat(this.local.cep, '-', this.praga.codigo.toString(), '-', this.data.toString());
+        this.chave = "".concat(this.local.cep, "-", this.praga.codigo.toString(), "-", this.data.toString());
     }
     return Contaminacao;
 }());
 var Admin = /** @class */ (function () {
     function Admin() {
         var _a, _b, _c;
-        this.ListaDeLocais = (_a = JSON.parse(localStorage.getItem("lista-locais"))) !== null && _a !== void 0 ? _a : new Array;
-        this.ListaDePragas = (_b = JSON.parse(localStorage.getItem("lista-pragas"))) !== null && _b !== void 0 ? _b : new Array;
-        this.ListaDeContms = (_c = JSON.parse(localStorage.getItem("lista-contms"))) !== null && _c !== void 0 ? _c : new Array;
+        this.ListaDeLocais =
+            (_a = JSON.parse(localStorage.getItem("lista-locais"))) !== null && _a !== void 0 ? _a : new Array();
+        this.ListaDePragas =
+            (_b = JSON.parse(localStorage.getItem("lista-pragas"))) !== null && _b !== void 0 ? _b : new Array();
+        this.ListaDeContms =
+            (_c = JSON.parse(localStorage.getItem("lista-contms"))) !== null && _c !== void 0 ? _c : new Array();
     }
     Admin.prototype.LocalPorCEP = function (Cep) {
         return this.ListaDeLocais.filter(function (e) { return e.cep == Cep; })[0];
@@ -86,10 +89,12 @@ var Admin = /** @class */ (function () {
     return Admin;
 }());
 var Listas = new Admin();
-//localStorage.clear();
-Listas.InsereLocal(new Local("12345-678", 36, 280000, "Blau"));
-Listas.InserePraga(new Praga(23, "Mickey", "Laptopspirose", 200, "Fogo"));
-Listas.InsereContaminacao(new Contaminacao(Listas.LocalPorCEP("12345-678"), Listas.PragaPorCodigo(23), new Date(2020, 2, 23), "Fazer Pizza", new Date(2022, 4, 19)));
+function Reset() {
+    localStorage.clear();
+    Listas.InsereLocal(new Local("12345-678", 36, 280000, "Blau"));
+    Listas.InserePraga(new Praga(23, "Mickey", "Laptopspirose", 200, "Fogo"));
+    Listas.InsereContaminacao(new Contaminacao(Listas.LocalPorCEP("12345-678"), Listas.PragaPorCodigo(23), new Date(2020, 2, 23), "Fazer Pizza", new Date(2022, 4, 19)));
+}
 function Teste() {
     Listas.InsereLocal(new Local("12345-679", 6, 280000, "Blau"));
     var loca = Listas.LocalPorCEP("12345-678");
@@ -107,9 +112,9 @@ function Teste() {
 function ListarUmLocal() {
     var place = document.getElementById("listar_um");
     var child = document.getElementById("lista-um-child");
-    var cep = document.getElementById("cep-lista-um").value;
-    if (cep == "")
-        return;
+    var cep = document.getElementById("cep-lista-um")
+        .value;
+    // if (cep == "") return;
     var local = Listas.LocalPorCEP(cep);
     if (!local) {
         if (child) {
@@ -128,7 +133,7 @@ function ListarUmLocal() {
 }
 function LocalToHTML(local) {
     var str = "";
-    return str.concat("<p>CEP: ", local.cep, "<br>Raio: ", local.raio.toString(), "<br>População: ", local.populacao.toString(), "<br>Detalhes: ", local.detalhes, "</p>");
+    return str.concat("CEP: ", local.cep, "<br>Raio: ", local.raio.toString(), "<br>População: ", local.populacao.toString(), "<br>Detalhes: ", local.detalhes);
 }
 function ListarTodosLocais() {
     var place = document.getElementById("listar_todos");
@@ -154,10 +159,14 @@ function IncluirLocal() {
     Listas.InsereLocal(new Local(cep, +rai, +pop, det));
 }
 function AlterarLocal() {
-    var cep = document.getElementById("cep-local-e").value;
-    var rai = document.getElementById("rai-local-e").value;
-    var pop = document.getElementById("pop-local-e").value;
-    var det = document.getElementById("det-local-e").value;
+    var cep = document.getElementById("cep-local-e")
+        .value;
+    var rai = document.getElementById("rai-local-e")
+        .value;
+    var pop = document.getElementById("pop-local-e")
+        .value;
+    var det = document.getElementById("det-local-e")
+        .value;
     if (cep == "")
         return;
     var local = Listas.LocalPorCEP(cep);
@@ -176,7 +185,8 @@ function RemoverLocal() {
     var place = document.getElementById("remover");
     var child = document.getElementById("lista-rem-child");
     var cchil = document.getElementById("rem-conf");
-    var cep = document.getElementById("cep-lista-rem").value;
+    var cep = document.getElementById("cep-lista-rem")
+        .value;
     if (cep == "")
         return;
     var local = Listas.LocalPorCEP(cep);
@@ -197,7 +207,7 @@ function RemoverLocal() {
     place === null || place === void 0 ? void 0 : place.appendChild(p);
     var c = document.createElement("p");
     c.setAttribute("id", "rem-conf");
-    c.innerHTML = "<p>Tem certeza?</p>";
+    c.innerHTML = "Tem certeza?";
     place === null || place === void 0 ? void 0 : place.append(c);
     var botaoSim = document.createElement("button");
     var botaoNao = document.createElement("button");
@@ -205,9 +215,12 @@ function RemoverLocal() {
     botaoSim.onclick = function () {
         Listas.RemoveLocal(Listas.LocalPorCEP(cep));
         var d = document.createElement("p");
-        d.innerHTML = "<p>Removido!</p>";
+        d.innerHTML = "Removido!";
         place === null || place === void 0 ? void 0 : place.append(d);
-        setTimeout(function () { place === null || place === void 0 ? void 0 : place.removeChild(d); botaoNao.click(); }, 3500);
+        setTimeout(function () {
+            place === null || place === void 0 ? void 0 : place.removeChild(d);
+            botaoNao.click();
+        }, 3500);
     };
     botaoNao.innerHTML = "Não";
     botaoNao.onclick = function () {
@@ -222,9 +235,9 @@ function RemoverLocal() {
 function ListarUmaPraga() {
     var place = document.getElementById("listar_uma");
     var child = document.getElementById("lista-uma-child");
-    var cod = document.getElementById("cod-lista-uma").value;
-    if (cod == "")
-        return;
+    var cod = document.getElementById("cod-lista-uma")
+        .value;
+    // if (cod == "") return;
     var praga = Listas.PragaPorCodigo(+cod);
     if (!praga) {
         if (child) {
@@ -243,7 +256,7 @@ function ListarUmaPraga() {
 }
 function PragaToHTML(praga) {
     var str = "";
-    return str.concat("<p>Código: ", praga.codigo.toString(), "<br>Nome: ", praga.nome, "<br>Doenças Transmitidas: ", praga.doencasTransmitidas, "<br>Tempo de Vida: ", praga.tempoVida.toString(), " anos", "<br>Modos de Combate: ", praga.modosCombate, "</p>");
+    return str.concat("Código: ", praga.codigo.toString(), "<br>Nome: ", praga.nome, "<br>Doenças Transmitidas: ", praga.doencasTransmitidas, "<br>Tempo de Vida: ", praga.tempoVida.toString(), " anos", "<br>Modos de Combate: ", praga.modosCombate);
 }
 function ListarTodasPragas() {
     var place = document.getElementById("listar_todas");
@@ -270,11 +283,16 @@ function IncluirPraga() {
     Listas.InserePraga(new Praga(+cod, nom, dot, +tev, moc));
 }
 function AlterarPraga() {
-    var cod = document.getElementById("cod-praga-e").value;
-    var nom = document.getElementById("nom-praga-e").value;
-    var dot = document.getElementById("dot-praga-e").value;
-    var tev = document.getElementById("tev-praga-e").value;
-    var moc = document.getElementById("moc-praga-e").value;
+    var cod = document.getElementById("cod-praga-e")
+        .value;
+    var nom = document.getElementById("nom-praga-e")
+        .value;
+    var dot = document.getElementById("dot-praga-e")
+        .value;
+    var tev = document.getElementById("tev-praga-e")
+        .value;
+    var moc = document.getElementById("moc-praga-e")
+        .value;
     if (+cod == 0)
         return;
     var praga = Listas.PragaPorCodigo(+cod);
@@ -296,7 +314,8 @@ function RemoverPraga() {
     var place = document.getElementById("remover");
     var child = document.getElementById("lista-rem-child");
     var cchil = document.getElementById("rem-conf");
-    var cod = document.getElementById("cod-praga-rem").value;
+    var cod = document.getElementById("cod-praga-rem")
+        .value;
     if (cod == "")
         return;
     var praga = Listas.PragaPorCodigo(+cod);
@@ -317,7 +336,7 @@ function RemoverPraga() {
     place === null || place === void 0 ? void 0 : place.appendChild(p);
     var c = document.createElement("p");
     c.setAttribute("id", "rem-conf");
-    c.innerHTML = "<p>Tem certeza?</p>";
+    c.innerHTML = "Tem certeza?";
     place === null || place === void 0 ? void 0 : place.append(c);
     var botaoSim = document.createElement("button");
     var botaoNao = document.createElement("button");
@@ -325,9 +344,12 @@ function RemoverPraga() {
     botaoSim.onclick = function () {
         Listas.RemovePraga(Listas.PragaPorCodigo(+cod));
         var d = document.createElement("p");
-        d.innerHTML = "<p>Removido!</p>";
+        d.innerHTML = "Removido!";
         place === null || place === void 0 ? void 0 : place.append(d);
-        setTimeout(function () { place === null || place === void 0 ? void 0 : place.removeChild(d); botaoNao.click(); }, 3500);
+        setTimeout(function () {
+            place === null || place === void 0 ? void 0 : place.removeChild(d);
+            botaoNao.click();
+        }, 3500);
     };
     botaoNao.innerHTML = "Não";
     botaoNao.onclick = function () {

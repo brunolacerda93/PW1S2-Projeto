@@ -15,7 +15,7 @@ class Local {
 class Praga {
   codigo: number;
   nome: string;
-  doencasTransmitidas: string;
+  doencasTransmitidas: Array<string>;
   tempoVida: number;
   modosCombate: string;
 
@@ -28,7 +28,8 @@ class Praga {
   ) {
     this.codigo = codigo;
     this.nome = nome;
-    this.doencasTransmitidas = doencasTransmitidas;
+    this.doencasTransmitidas = new Array<string>();
+    this.doencasTransmitidas.push(doencasTransmitidas);
     this.tempoVida = tempoVida;
     this.modosCombate = modosCombate;
   }
@@ -384,7 +385,7 @@ function PragaToHTML(praga: Praga): string {
     "<br>Nome: ",
     praga.nome,
     "<br>Doenças Transmitidas: ",
-    praga.doencasTransmitidas,
+    praga.doencasTransmitidas.toString(),
     "<br>Tempo de Vida: ",
     praga.tempoVida.toString(),
     " anos",
@@ -424,16 +425,11 @@ function IncluirPraga() {
 }
 
 function AlterarPraga() {
-  const cod = (document.getElementById("cod-praga-e") as HTMLInputElement)
-    .value;
-  const nom = (document.getElementById("nom-praga-e") as HTMLInputElement)
-    .value;
-  const dot = (document.getElementById("dot-praga-e") as HTMLInputElement)
-    .value;
-  const tev = (document.getElementById("tev-praga-e") as HTMLInputElement)
-    .value;
-  const moc = (document.getElementById("moc-praga-e") as HTMLInputElement)
-    .value;
+  const cod = (document.getElementById("cod-praga-e") as HTMLInputElement).value;
+  const nom = (document.getElementById("nom-praga-e") as HTMLInputElement).value;
+  const dot = (document.getElementById("dot-praga-e") as HTMLInputElement).value;
+  const tev = (document.getElementById("tev-praga-e") as HTMLInputElement).value;
+  const moc = (document.getElementById("moc-praga-e") as HTMLInputElement).value;
 
   if (+cod == 0) return;
 
@@ -444,7 +440,7 @@ function AlterarPraga() {
   }
 
   if (dot != "") {
-    praga.doencasTransmitidas = dot;
+    praga.doencasTransmitidas.push(dot);
   }
 
   if (+tev != 0) {
@@ -521,4 +517,40 @@ function RemoverPraga() {
 
   place?.append(botaoSim);
   place?.append(botaoNao);
+}
+
+function ListarUmaContm() {
+
+}
+
+function ContmToHTML(contm: Contaminacao) {
+
+}
+
+function ListarTodasContms() {
+
+}
+
+function IncluirContm() {
+
+}
+
+function AlterarContm() {
+
+}
+
+function RemoverContm() {
+
+}
+
+function DoencasEtPragas(n: number) {
+
+}
+
+function PragasEtDoencas() {
+
+}
+
+function ContmsEtDatas() {
+
 }

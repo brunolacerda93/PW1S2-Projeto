@@ -11,7 +11,8 @@ var Praga = /** @class */ (function () {
     function Praga(codigo, nome, doencasTransmitidas, tempoVida, modosCombate) {
         this.codigo = codigo;
         this.nome = nome;
-        this.doencasTransmitidas = doencasTransmitidas;
+        this.doencasTransmitidas = new Array();
+        this.doencasTransmitidas.push(doencasTransmitidas);
         this.tempoVida = tempoVida;
         this.modosCombate = modosCombate;
     }
@@ -256,7 +257,7 @@ function ListarUmaPraga() {
 }
 function PragaToHTML(praga) {
     var str = "";
-    return str.concat("Código: ", praga.codigo.toString(), "<br>Nome: ", praga.nome, "<br>Doenças Transmitidas: ", praga.doencasTransmitidas, "<br>Tempo de Vida: ", praga.tempoVida.toString(), " anos", "<br>Modos de Combate: ", praga.modosCombate);
+    return str.concat("Código: ", praga.codigo.toString(), "<br>Nome: ", praga.nome, "<br>Doenças Transmitidas: ", praga.doencasTransmitidas.toString(), "<br>Tempo de Vida: ", praga.tempoVida.toString(), " anos", "<br>Modos de Combate: ", praga.modosCombate);
 }
 function ListarTodasPragas() {
     var place = document.getElementById("listar_todas");
@@ -283,16 +284,11 @@ function IncluirPraga() {
     Listas.InserePraga(new Praga(+cod, nom, dot, +tev, moc));
 }
 function AlterarPraga() {
-    var cod = document.getElementById("cod-praga-e")
-        .value;
-    var nom = document.getElementById("nom-praga-e")
-        .value;
-    var dot = document.getElementById("dot-praga-e")
-        .value;
-    var tev = document.getElementById("tev-praga-e")
-        .value;
-    var moc = document.getElementById("moc-praga-e")
-        .value;
+    var cod = document.getElementById("cod-praga-e").value;
+    var nom = document.getElementById("nom-praga-e").value;
+    var dot = document.getElementById("dot-praga-e").value;
+    var tev = document.getElementById("tev-praga-e").value;
+    var moc = document.getElementById("moc-praga-e").value;
     if (+cod == 0)
         return;
     var praga = Listas.PragaPorCodigo(+cod);
@@ -300,7 +296,7 @@ function AlterarPraga() {
         praga.nome = nom;
     }
     if (dot != "") {
-        praga.doencasTransmitidas = dot;
+        praga.doencasTransmitidas.push(dot);
     }
     if (+tev != 0) {
         praga.tempoVida = +tev;
@@ -360,5 +356,23 @@ function RemoverPraga() {
     };
     place === null || place === void 0 ? void 0 : place.append(botaoSim);
     place === null || place === void 0 ? void 0 : place.append(botaoNao);
+}
+function ListarUmaContm() {
+}
+function ContmToHTML(contm) {
+}
+function ListarTodasContms() {
+}
+function IncluirContm() {
+}
+function AlterarContm() {
+}
+function RemoverContm() {
+}
+function DoencasEtPragas(n) {
+}
+function PragasEtDoencas() {
+}
+function ContmsEtDatas() {
 }
 //# sourceMappingURL=scripts.js.map

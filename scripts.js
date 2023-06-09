@@ -1,14 +1,13 @@
-var Local = /** @class */ (function () {
-    function Local(CEP, raio, populacao, detalhes) {
+class Local {
+    constructor(CEP, raio, populacao, detalhes) {
         this.cep = CEP;
         this.raio = raio;
         this.populacao = populacao;
         this.detalhes = detalhes;
     }
-    return Local;
-}());
-var Praga = /** @class */ (function () {
-    function Praga(codigo, nome, doencasTransmitidas, tempoVida, modosCombate) {
+}
+class Praga {
+    constructor(codigo, nome, doencasTransmitidas, tempoVida, modosCombate) {
         this.codigo = codigo;
         this.nome = nome;
         this.doencasTransmitidas = new Array();
@@ -16,10 +15,9 @@ var Praga = /** @class */ (function () {
         this.tempoVida = tempoVida;
         this.modosCombate = modosCombate;
     }
-    return Praga;
-}());
-var Contaminacao = /** @class */ (function () {
-    function Contaminacao(local, praga, data, acoes, dataExterminio) {
+}
+class Contaminacao {
+    constructor(local, praga, data, acoes, dataExterminio) {
         var _a, _b, _c;
         this.local = local;
         this.praga = praga;
@@ -28,10 +26,9 @@ var Contaminacao = /** @class */ (function () {
         this.dataExterminio = dataExterminio !== null && dataExterminio !== void 0 ? dataExterminio : new Date(1900, 0, 1);
         this.chave = "".concat((_a = this.local) === null || _a === void 0 ? void 0 : _a.cep, "-", (_b = this.praga) === null || _b === void 0 ? void 0 : _b.codigo.toString(), "-", (_c = this.data) === null || _c === void 0 ? void 0 : _c.toUTCString());
     }
-    return Contaminacao;
-}());
-var Admin = /** @class */ (function () {
-    function Admin() {
+}
+class Admin {
+    constructor() {
         var _a, _b, _c;
         this.ListaDeLocais =
             (_a = JSON.parse(localStorage.getItem("lista-locais"))) !== null && _a !== void 0 ? _a : new Array();
@@ -40,57 +37,56 @@ var Admin = /** @class */ (function () {
         this.ListaDeContms =
             (_c = JSON.parse(localStorage.getItem("lista-contms"))) !== null && _c !== void 0 ? _c : new Array();
     }
-    Admin.prototype.LocalPorCEP = function (Cep) {
-        return this.ListaDeLocais.filter(function (e) { return e.cep == Cep; })[0];
-    };
-    Admin.prototype.PragaPorCodigo = function (codigo) {
-        return this.ListaDePragas.filter(function (e) { return e.codigo == codigo; })[0];
-    };
-    Admin.prototype.PragaPorNome = function (nome) {
-        return this.ListaDePragas.filter(function (e) { return e.nome == nome; })[0];
-    };
-    Admin.prototype.ContmPorChave = function (chave) {
-        return this.ListaDeContms.filter(function (e) { return e.chave == chave; })[0];
-    };
-    Admin.prototype.InsereLocal = function (Local) {
+    LocalPorCEP(Cep) {
+        return this.ListaDeLocais.filter((e) => e.cep == Cep)[0];
+    }
+    PragaPorCodigo(codigo) {
+        return this.ListaDePragas.filter((e) => e.codigo == codigo)[0];
+    }
+    PragaPorNome(nome) {
+        return this.ListaDePragas.filter((e) => e.nome == nome)[0];
+    }
+    ContmPorChave(chave) {
+        return this.ListaDeContms.filter((e) => e.chave == chave)[0];
+    }
+    InsereLocal(Local) {
         if (this.LocalPorCEP(Local.cep)) {
             console.log("ERRO: Local informado já se encontra no sistema!!!");
             return;
         }
         this.ListaDeLocais.push(Local);
         localStorage.setItem("lista-locais", JSON.stringify(this.ListaDeLocais));
-    };
-    Admin.prototype.InserePraga = function (Praga) {
+    }
+    InserePraga(Praga) {
         if (this.PragaPorCodigo(Praga.codigo)) {
             console.log("ERRO: Praga informada já se encontra no sistema!!!");
             return;
         }
         this.ListaDePragas.push(Praga);
         localStorage.setItem("lista-pragas", JSON.stringify(this.ListaDePragas));
-    };
-    Admin.prototype.InsereContaminacao = function (Contaminacao) {
+    }
+    InsereContaminacao(Contaminacao) {
         if (this.ContmPorChave(Contaminacao.chave)) {
             console.log("ERRO: Contaminação informada já se encontra no sistema!!!");
             return;
         }
         this.ListaDeContms.push(Contaminacao);
         localStorage.setItem("lista-contms", JSON.stringify(this.ListaDeContms));
-    };
-    Admin.prototype.RemoveLocal = function (Local) {
+    }
+    RemoveLocal(Local) {
         this.ListaDeLocais.splice(this.ListaDeLocais.indexOf(Local), 1);
         localStorage.setItem("lista-locais", JSON.stringify(this.ListaDeLocais));
-    };
-    Admin.prototype.RemovePraga = function (Praga) {
+    }
+    RemovePraga(Praga) {
         this.ListaDePragas.splice(this.ListaDePragas.indexOf(Praga), 1);
         localStorage.setItem("lista-pragas", JSON.stringify(this.ListaDePragas));
-    };
-    Admin.prototype.RemoveContm = function (Contaminacao) {
+    }
+    RemoveContm(Contaminacao) {
         this.ListaDeContms.splice(this.ListaDeContms.indexOf(Contaminacao), 1);
         localStorage.setItem("lista-contms", JSON.stringify(this.ListaDeContms));
-    };
-    return Admin;
-}());
-var Listas = new Admin();
+    }
+}
+let Listas = new Admin();
 function Reset() {
     localStorage.clear();
     Listas.InsereLocal(new Local("12345-678", 36, 280000, "Blau"));
@@ -99,11 +95,11 @@ function Reset() {
 }
 function Teste() {
     Listas.InsereLocal(new Local("12345-679", 6, 280000, "Blau"));
-    var loca = Listas.LocalPorCEP("12345-678");
-    var prag = Listas.PragaPorCodigo(23);
+    const loca = Listas.LocalPorCEP("12345-678");
+    const prag = Listas.PragaPorCodigo(23);
     console.log("Local Por CEP: ", loca);
     console.log("Praga Por Cod: ", prag);
-    var cont = new Contaminacao(loca, prag, new Date("2020-03-23"));
+    const cont = new Contaminacao(loca, prag, new Date("2020-03-23"));
     console.log("Contm Por Chave: ", Listas.ContmPorChave(cont.chave));
     Listas.ContmPorChave(cont.chave).dataExterminio = new Date("2022-10-20");
     console.log("Contm Update: ", Listas.ContmPorChave(cont.chave));
@@ -112,10 +108,10 @@ function Teste() {
     console.table(Listas.ListaDeContms);
 }
 function ListarUmLocal() {
-    var place = document.getElementById("listar_um");
-    var child = document.getElementById("lista-um-child");
-    var cep = document.getElementById("cep-lista-um").value;
-    var local = Listas.LocalPorCEP(cep);
+    const place = document.getElementById("listar_um");
+    const child = document.getElementById("lista-um-child");
+    const cep = document.getElementById("cep-lista-um").value;
+    const local = Listas.LocalPorCEP(cep);
     if (!local) {
         if (child) {
             place === null || place === void 0 ? void 0 : place.removeChild(document.getElementById("lista-um-child"));
@@ -126,50 +122,50 @@ function ListarUmLocal() {
         child.innerHTML = LocalToHTML(local);
         return;
     }
-    var p = document.createElement("p");
+    const p = document.createElement("p");
     p.setAttribute("id", "lista-um-child");
     p.innerHTML = LocalToHTML(local);
     place === null || place === void 0 ? void 0 : place.appendChild(p);
 }
 function LocalToHTML(local) {
-    var str = "";
+    let str = "";
     return str.concat("CEP: ", local.cep, "<br>Raio: ", local.raio.toString(), "<br>População: ", local.populacao.toString(), "<br>Detalhes: ", local.detalhes);
 }
 function ListarTodosLocais() {
-    var place = document.getElementById("listar_todos");
-    var lista = Listas.ListaDeLocais;
-    var index;
-    for (var i = 0; i < lista.length; i++) {
+    const place = document.getElementById("listar_todos");
+    const lista = Listas.ListaDeLocais;
+    let index;
+    for (let i = 0; i < lista.length; i++) {
         index = "lista-todos-child-".concat(i.toString());
         if (document.getElementById(index))
             break;
-        var p = document.createElement("p");
+        const p = document.createElement("p");
         p.setAttribute("id", index);
         p.innerHTML = LocalToHTML(lista[i]);
         place === null || place === void 0 ? void 0 : place.appendChild(p);
     }
 }
 function IncluirLocal() {
-    var cep = document.getElementById("cep-local").value;
-    var rai = document.getElementById("rai-local").value;
-    var pop = document.getElementById("pop-local").value;
-    var det = document.getElementById("det-local").value;
+    const cep = document.getElementById("cep-local").value;
+    const rai = document.getElementById("rai-local").value;
+    const pop = document.getElementById("pop-local").value;
+    const det = document.getElementById("det-local").value;
     if (cep == "" || +rai == 0 || +pop == 0)
         return;
     Listas.InsereLocal(new Local(cep, +rai, +pop, det));
 }
 function AlterarLocal() {
-    var cep = document.getElementById("cep-local-e")
+    const cep = document.getElementById("cep-local-e")
         .value;
-    var rai = document.getElementById("rai-local-e")
+    const rai = document.getElementById("rai-local-e")
         .value;
-    var pop = document.getElementById("pop-local-e")
+    const pop = document.getElementById("pop-local-e")
         .value;
-    var det = document.getElementById("det-local-e")
+    const det = document.getElementById("det-local-e")
         .value;
     if (cep == "")
         return;
-    var local = Listas.LocalPorCEP(cep);
+    const local = Listas.LocalPorCEP(cep);
     if (rai != "") {
         local.raio = +rai;
     }
@@ -182,14 +178,14 @@ function AlterarLocal() {
     localStorage.setItem("lista-locais", JSON.stringify(Listas.ListaDeLocais));
 }
 function RemoverLocal() {
-    var place = document.getElementById("remover");
-    var child = document.getElementById("lista-rem-child");
-    var cchil = document.getElementById("rem-conf");
-    var cep = document.getElementById("cep-lista-rem")
+    const place = document.getElementById("remover");
+    const child = document.getElementById("lista-rem-child");
+    const cchil = document.getElementById("rem-conf");
+    const cep = document.getElementById("cep-lista-rem")
         .value;
     if (cep == "")
         return;
-    var local = Listas.LocalPorCEP(cep);
+    const local = Listas.LocalPorCEP(cep);
     if (!local) {
         if (child) {
             place === null || place === void 0 ? void 0 : place.removeChild(child);
@@ -201,29 +197,29 @@ function RemoverLocal() {
         child.innerHTML = LocalToHTML(local);
         return;
     }
-    var p = document.createElement("p");
+    const p = document.createElement("p");
     p.setAttribute("id", "lista-rem-child");
     p.innerHTML = LocalToHTML(local);
     place === null || place === void 0 ? void 0 : place.appendChild(p);
-    var c = document.createElement("p");
+    const c = document.createElement("p");
     c.setAttribute("id", "rem-conf");
     c.innerHTML = "Tem certeza?";
     place === null || place === void 0 ? void 0 : place.append(c);
-    var botaoSim = document.createElement("button");
-    var botaoNao = document.createElement("button");
+    const botaoSim = document.createElement("button");
+    const botaoNao = document.createElement("button");
     botaoSim.innerHTML = "Sim";
-    botaoSim.onclick = function () {
+    botaoSim.onclick = () => {
         Listas.RemoveLocal(Listas.LocalPorCEP(cep));
-        var d = document.createElement("p");
+        const d = document.createElement("p");
         d.innerHTML = "Removido!";
         place === null || place === void 0 ? void 0 : place.append(d);
-        setTimeout(function () {
+        setTimeout(() => {
             place === null || place === void 0 ? void 0 : place.removeChild(d);
             botaoNao.click();
         }, 3500);
     };
     botaoNao.innerHTML = "Não";
-    botaoNao.onclick = function () {
+    botaoNao.onclick = () => {
         place === null || place === void 0 ? void 0 : place.removeChild(p);
         place === null || place === void 0 ? void 0 : place.removeChild(c);
         place === null || place === void 0 ? void 0 : place.removeChild(botaoSim);
@@ -233,10 +229,10 @@ function RemoverLocal() {
     place === null || place === void 0 ? void 0 : place.append(botaoNao);
 }
 function ListarUmaPraga() {
-    var place = document.getElementById("listar_uma");
-    var child = document.getElementById("lista-uma-child");
-    var cod = document.getElementById("cod-lista-uma").value;
-    var praga = Listas.PragaPorCodigo(+cod);
+    const place = document.getElementById("listar_uma");
+    const child = document.getElementById("lista-uma-child");
+    const cod = document.getElementById("cod-lista-uma").value;
+    const praga = Listas.PragaPorCodigo(+cod);
     if (!praga) {
         if (child) {
             place === null || place === void 0 ? void 0 : place.removeChild(document.getElementById("lista-uma-child"));
@@ -247,48 +243,48 @@ function ListarUmaPraga() {
         child.innerHTML = PragaToHTML(praga);
         return;
     }
-    var p = document.createElement("p");
+    const p = document.createElement("p");
     p.setAttribute("id", "lista-uma-child");
     p.innerHTML = PragaToHTML(praga);
     place === null || place === void 0 ? void 0 : place.appendChild(p);
 }
 function PragaToHTML(praga) {
-    var str = "";
+    let str = "";
     return str.concat("Código: ", praga.codigo.toString(), "<br>Nome: ", praga.nome, "<br>Doenças Transmitidas: ", praga.doencasTransmitidas.toString(), "<br>Tempo de Vida: ", praga.tempoVida.toString(), " anos", "<br>Modos de Combate: ", praga.modosCombate);
 }
 function ListarTodasPragas() {
-    var place = document.getElementById("listar_todas");
-    var lista = Listas.ListaDePragas;
-    var index;
-    for (var i = 0; i < lista.length; i++) {
+    const place = document.getElementById("listar_todas");
+    const lista = Listas.ListaDePragas;
+    let index;
+    for (let i = 0; i < lista.length; i++) {
         index = "lista-todos-child-".concat(i.toString());
         if (document.getElementById(index))
             break;
-        var p = document.createElement("p");
+        const p = document.createElement("p");
         p.setAttribute("id", index);
         p.innerHTML = PragaToHTML(lista[i]);
         place === null || place === void 0 ? void 0 : place.appendChild(p);
     }
 }
 function IncluirPraga() {
-    var cod = document.getElementById("cod-praga").value;
-    var nom = document.getElementById("nom-praga").value;
-    var dot = document.getElementById("dot-praga").value;
-    var tev = document.getElementById("tev-praga").value;
-    var moc = document.getElementById("moc-praga").value;
+    const cod = document.getElementById("cod-praga").value;
+    const nom = document.getElementById("nom-praga").value;
+    const dot = document.getElementById("dot-praga").value;
+    const tev = document.getElementById("tev-praga").value;
+    const moc = document.getElementById("moc-praga").value;
     if (+cod == 0 || nom == "" || dot == "" || +tev == 0 || moc == "")
         return;
     Listas.InserePraga(new Praga(+cod, nom, dot, +tev, moc));
 }
 function AlterarPraga() {
-    var cod = document.getElementById("cod-praga-e").value;
-    var nom = document.getElementById("nom-praga-e").value;
-    var dot = document.getElementById("dot-praga-e").value;
-    var tev = document.getElementById("tev-praga-e").value;
-    var moc = document.getElementById("moc-praga-e").value;
+    const cod = document.getElementById("cod-praga-e").value;
+    const nom = document.getElementById("nom-praga-e").value;
+    const dot = document.getElementById("dot-praga-e").value;
+    const tev = document.getElementById("tev-praga-e").value;
+    const moc = document.getElementById("moc-praga-e").value;
     if (+cod == 0)
         return;
-    var praga = Listas.PragaPorCodigo(+cod);
+    const praga = Listas.PragaPorCodigo(+cod);
     if (nom != "") {
         praga.nome = nom;
     }
@@ -304,13 +300,13 @@ function AlterarPraga() {
     localStorage.setItem("lista-pragas", JSON.stringify(Listas.ListaDePragas));
 }
 function RemoverPraga() {
-    var place = document.getElementById("remover");
-    var child = document.getElementById("lista-rem-child");
-    var cchil = document.getElementById("rem-conf");
-    var cod = document.getElementById("cod-praga-rem").value;
+    const place = document.getElementById("remover");
+    const child = document.getElementById("lista-rem-child");
+    const cchil = document.getElementById("rem-conf");
+    const cod = document.getElementById("cod-praga-rem").value;
     if (cod == "")
         return;
-    var praga = Listas.PragaPorCodigo(+cod);
+    const praga = Listas.PragaPorCodigo(+cod);
     if (!praga) {
         if (child) {
             place === null || place === void 0 ? void 0 : place.removeChild(child);
@@ -322,29 +318,29 @@ function RemoverPraga() {
         child.innerHTML = PragaToHTML(praga);
         return;
     }
-    var p = document.createElement("p");
+    const p = document.createElement("p");
     p.setAttribute("id", "lista-rem-child");
     p.innerHTML = PragaToHTML(praga);
     place === null || place === void 0 ? void 0 : place.appendChild(p);
-    var c = document.createElement("p");
+    const c = document.createElement("p");
     c.setAttribute("id", "rem-conf");
     c.innerHTML = "Tem certeza?";
     place === null || place === void 0 ? void 0 : place.append(c);
-    var botaoSim = document.createElement("button");
-    var botaoNao = document.createElement("button");
+    const botaoSim = document.createElement("button");
+    const botaoNao = document.createElement("button");
     botaoSim.innerHTML = "Sim";
-    botaoSim.onclick = function () {
+    botaoSim.onclick = () => {
         Listas.RemovePraga(Listas.PragaPorCodigo(+cod));
-        var d = document.createElement("p");
+        const d = document.createElement("p");
         d.innerHTML = "Removido!";
         place === null || place === void 0 ? void 0 : place.append(d);
-        setTimeout(function () {
+        setTimeout(() => {
             place === null || place === void 0 ? void 0 : place.removeChild(d);
             botaoNao.click();
         }, 3500);
     };
     botaoNao.innerHTML = "Não";
-    botaoNao.onclick = function () {
+    botaoNao.onclick = () => {
         place === null || place === void 0 ? void 0 : place.removeChild(p);
         place === null || place === void 0 ? void 0 : place.removeChild(c);
         place === null || place === void 0 ? void 0 : place.removeChild(botaoSim);
@@ -354,15 +350,15 @@ function RemoverPraga() {
     place === null || place === void 0 ? void 0 : place.append(botaoNao);
 }
 function ListarUmaContm() {
-    var place = document.getElementById("listar_uma");
-    var child = document.getElementById("lista-uma-child");
-    var cep = document.getElementById("cep-lista-uma").value;
-    var cod = +document.getElementById("cod-lista-uma").value;
-    var dat = new Date(document.getElementById("dat-lista-uma").value);
-    var local = Listas.LocalPorCEP(cep);
-    var praga = Listas.PragaPorCodigo(cod);
-    var aux = new Contaminacao(local, praga, dat);
-    var contm = Listas.ContmPorChave(aux.chave);
+    const place = document.getElementById("listar_uma");
+    const child = document.getElementById("lista-uma-child");
+    const cep = document.getElementById("cep-lista-uma").value;
+    const cod = +document.getElementById("cod-lista-uma").value;
+    const dat = new Date(document.getElementById("dat-lista-uma").value);
+    const local = Listas.LocalPorCEP(cep);
+    const praga = Listas.PragaPorCodigo(cod);
+    const aux = new Contaminacao(local, praga, dat);
+    const contm = Listas.ContmPorChave(aux.chave);
     if (!contm) {
         if (child) {
             place === null || place === void 0 ? void 0 : place.removeChild(child);
@@ -373,48 +369,48 @@ function ListarUmaContm() {
         child.innerHTML = ContmToHTML(contm);
         return;
     }
-    var p = document.createElement("p");
+    const p = document.createElement("p");
     p.setAttribute("id", "lista-uma-child");
     p.innerHTML = ContmToHTML(contm);
     place === null || place === void 0 ? void 0 : place.appendChild(p);
 }
 function ContmToHTML(contm) {
-    var str = "";
+    let str = "";
     return str.concat("Local: ", contm.local.cep, "<br>Praga: ", contm.praga.nome, "<br>Data: ", contm.data.toString(), "<br>Ações: ", contm.acoes, "<br>Data de Extermínio: ", contm.dataExterminio.toString());
 }
 function ListarTodasContms() {
-    var place = document.getElementById("listar_todas");
-    var lista = Listas.ListaDeContms;
-    var index;
-    for (var i = 0; i < lista.length; i++) {
+    const place = document.getElementById("listar_todas");
+    const lista = Listas.ListaDeContms;
+    let index;
+    for (let i = 0; i < lista.length; i++) {
         index = "lista-todos-child-".concat(i.toString());
         if (document.getElementById(index))
             break;
-        var p = document.createElement("p");
+        const p = document.createElement("p");
         p.setAttribute("id", index);
         p.innerHTML = ContmToHTML(lista[i]);
         place === null || place === void 0 ? void 0 : place.appendChild(p);
     }
 }
 function IncluirContm() {
-    var cep = document.getElementById("cep-contm").value;
-    var cod = +document.getElementById("cod-contm").value;
-    var dat = new Date(document.getElementById("dat-contm").value);
-    var aco = document.getElementById("aco-contm").value;
-    var datE = new Date(document.getElementById("date-contm").value);
+    const cep = document.getElementById("cep-contm").value;
+    const cod = +document.getElementById("cod-contm").value;
+    const dat = new Date(document.getElementById("dat-contm").value);
+    const aco = document.getElementById("aco-contm").value;
+    const datE = new Date(document.getElementById("date-contm").value);
     if (cep == "" || cod == 0 || !dat || aco == "" || !datE)
         return;
     Listas.InsereContaminacao(new Contaminacao(Listas.LocalPorCEP(cep), Listas.PragaPorCodigo(cod), dat, aco, datE));
 }
 function AlterarContm() {
-    var cep = document.getElementById("cep-contm-e").value;
-    var cod = +document.getElementById("cod-contm-e").value;
-    var dat = new Date(document.getElementById("dat-contm-e").value);
-    var aco = document.getElementById("aco-contm-e").value;
-    var datE = document.getElementById("date-contm-e").value;
+    const cep = document.getElementById("cep-contm-e").value;
+    const cod = +document.getElementById("cod-contm-e").value;
+    const dat = new Date(document.getElementById("dat-contm-e").value);
+    const aco = document.getElementById("aco-contm-e").value;
+    const datE = document.getElementById("date-contm-e").value;
     if (cep == "" || cod == 0 || !dat)
         return;
-    var contm = Listas.ContmPorChave((new Contaminacao(Listas.LocalPorCEP(cep), Listas.PragaPorCodigo(cod), dat).chave));
+    const contm = Listas.ContmPorChave((new Contaminacao(Listas.LocalPorCEP(cep), Listas.PragaPorCodigo(cod), dat).chave));
     if (aco != "") {
         contm.acoes = aco;
     }
@@ -424,15 +420,15 @@ function AlterarContm() {
     localStorage.setItem("lista-contms", JSON.stringify(Listas.ListaDeContms));
 }
 function RemoverContm() {
-    var place = document.getElementById("remover");
-    var child = document.getElementById("list-rem-child");
-    var cchil = document.getElementById("rem-conf");
-    var cep = document.getElementById("cep-contm-rem").value;
-    var cod = +document.getElementById("cod-contm-rem").value;
-    var dat = new Date(document.getElementById("dat-contm-rem").value);
+    const place = document.getElementById("remover");
+    const child = document.getElementById("list-rem-child");
+    const cchil = document.getElementById("rem-conf");
+    const cep = document.getElementById("cep-contm-rem").value;
+    const cod = +document.getElementById("cod-contm-rem").value;
+    const dat = new Date(document.getElementById("dat-contm-rem").value);
     if (cep == "" || cod == 0 || !dat)
         return;
-    var contm = Listas.ContmPorChave((new Contaminacao(Listas.LocalPorCEP(cep), Listas.PragaPorCodigo(cod), dat).chave));
+    const contm = Listas.ContmPorChave((new Contaminacao(Listas.LocalPorCEP(cep), Listas.PragaPorCodigo(cod), dat).chave));
     if (!contm) {
         if (child) {
             place === null || place === void 0 ? void 0 : place.removeChild(child);
@@ -444,29 +440,29 @@ function RemoverContm() {
         child.innerHTML = ContmToHTML(contm);
         return;
     }
-    var p = document.createElement("p");
+    const p = document.createElement("p");
     p.setAttribute("id", "lista-rem-child");
     p.innerHTML = ContmToHTML(contm);
     place === null || place === void 0 ? void 0 : place.appendChild(p);
-    var c = document.createElement("p");
+    const c = document.createElement("p");
     c.setAttribute("id", "rem-conf");
     c.innerHTML = "Tem certeza?";
     place === null || place === void 0 ? void 0 : place.append(c);
-    var botaoSim = document.createElement("button");
-    var botaoNao = document.createElement("button");
+    const botaoSim = document.createElement("button");
+    const botaoNao = document.createElement("button");
     botaoSim.innerHTML = "Sim";
-    botaoSim.onclick = function () {
+    botaoSim.onclick = () => {
         Listas.RemoveContm(Listas.ContmPorChave(contm.chave));
-        var d = document.createElement("p");
+        const d = document.createElement("p");
         d.innerHTML = "Removido!";
         place === null || place === void 0 ? void 0 : place.append(d);
-        setTimeout(function () {
+        setTimeout(() => {
             place === null || place === void 0 ? void 0 : place.removeChild(d);
             botaoNao.click();
         }, 3500);
     };
     botaoNao.innerHTML = "Não";
-    botaoNao.onclick = function () {
+    botaoNao.onclick = () => {
         place === null || place === void 0 ? void 0 : place.removeChild(p);
         place === null || place === void 0 ? void 0 : place.removeChild(c);
         place === null || place === void 0 ? void 0 : place.removeChild(botaoSim);
@@ -475,9 +471,42 @@ function RemoverContm() {
     place === null || place === void 0 ? void 0 : place.append(botaoSim);
     place === null || place === void 0 ? void 0 : place.append(botaoNao);
 }
-function DoencasEtPragas(n) {
+function DoencasEtPragas() {
+    const n = +document.getElementById("relat-num").value;
+    const lista = Listas.ListaDePragas;
+    for (let i = 0; i < lista.length; i++) {
+        if (lista[i].doencasTransmitidas.length > n) {
+            console.log(lista[i]);
+            // TODO: Exibir detalhes!
+        }
+    }
 }
 function PragasEtDoencas() {
+    const doe = document.getElementById("relat-doe").value;
+    const listaPrag = Listas.ListaDePragas;
+    const lista = [];
+    for (let i = 0; i < listaPrag.length; i++) {
+        let lista_doen = listaPrag[i].doencasTransmitidas;
+        for (let j = 0; j < lista_doen.length; j++) {
+            if (lista_doen[j].toLowerCase().includes(doe.toLowerCase())) {
+                lista.push(listaPrag[i]);
+                break;
+            }
+        }
+    }
+    console.table(lista);
+    // TODO: Exibir detalhes!
 }
 function ContmsEtDatas() {
+    const data_ini = new Date("2019-01-01").valueOf();
+    const data_fim = new Date("2019-03-31").valueOf();
+    const lista = Listas.ListaDeContms;
+    for (let i = 0; i < lista.length; i++) {
+        let data_contm = new Date(lista[i].data).valueOf();
+        if (data_contm >= data_ini && data_contm <= data_fim) {
+            console.log(lista[i].local);
+            console.log(lista[i].praga);
+            // TODO: Exibir detalhes!
+        }
+    }
 }

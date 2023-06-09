@@ -680,14 +680,50 @@ function RemoverContm() {
   place?.append(botaoNao);
 }
 
-function DoencasEtPragas(n: number) {
+function DoencasEtPragas() {
+  const n: number = +(document.getElementById("relat-num") as HTMLInputElement).value;
+  const lista = Listas.ListaDePragas;
 
+  for (let i = 0; i < lista.length; i++) {
+    if (lista[i].doencasTransmitidas.length > n) {
+      console.log(lista[i]);
+      // TODO: Exibir detalhes!
+    }
+  }
 }
 
 function PragasEtDoencas() {
+  const doe: string = (document.getElementById("relat-doe") as HTMLInputElement).value;
+  const listaPrag = Listas.ListaDePragas;
+  const lista = [];
 
+  for (let i = 0; i < listaPrag.length; i++) {
+    let lista_doen = listaPrag[i].doencasTransmitidas;
+
+    for (let j = 0; j < lista_doen.length; j++) {
+      if (lista_doen[j].toLowerCase().includes(doe.toLowerCase())) {
+        lista.push(listaPrag[i]);
+        break;
+      }
+    }
+  }
+
+  console.table(lista);
+  // TODO: Exibir detalhes!
 }
 
 function ContmsEtDatas() {
+  const data_ini: number = new Date("2019-01-01").valueOf();
+  const data_fim: number = new Date("2019-03-31").valueOf();
+  const lista = Listas.ListaDeContms;
 
+  for (let i = 0; i < lista.length; i++) {
+    let data_contm: number = new Date(lista[i].data).valueOf();
+
+    if (data_contm >= data_ini && data_contm <= data_fim) {
+      console.log(lista[i].local);
+      console.log(lista[i].praga);
+      // TODO: Exibir detalhes!
+    }
+  }
 }

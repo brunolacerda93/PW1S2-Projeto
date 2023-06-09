@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatórios</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header>
+    <h1>Epidemology Control Centre</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html">About</a></li>
+        <li><a href="index.html">Services</a></li>
+        <li><a href="locais.html">Locais</a></li>
+        <li><a href="pragas.html">Pragas</a></li>
+        <li><a href="contms.html">Contaminações</a></li>
+        <li><a href="relatorios.html">Relatórios</a></li>
+        <li><button onclick="Reset()">Reset</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div>
+      <section id="relat-1">
+        <h2>Relatório 1</h2>
+        <label for="relat-num">Número:</label>
+        <input id="relat-num" type="number" required>
+        <button onclick="DoencasEtPragas()">Submit</button>
+      </section>
+
+      <section id="relat-2">
+        <h2>Relatório 2</h2>
+        <label for="relat-doe">Doença:</label>
+        <input id="relat-doe" type="text" required>
+        <button onclick="PragasEtDoencas()">Submit</button>
+      </section>
+
+      <section id="relat-3">
+        <h2>Relatório 3</h2>
+        <button onclick="ContmsEtDatas()">Exibir</button>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <section id="contact">
+      <h2>Contact Us</h2>
+      <p>
+        For inquiries or assistance, please reach out to us using the
+        information below:
+      </p>
+      <address>
+        Epidemology Control Centre<br />
+        123 Main Street<br />
+        City, State ZIP<br />
+        Phone: (12) 3456-7890<br />
+        Email: info@epicentre.com
+      </address>
+    </section>
+    <p>&copy; 2023 Epidemology Control Centre. All rights reserved.</p>
+  </footer>
+  <script src="scripts.js"></script>
+</body>
+
+</html>

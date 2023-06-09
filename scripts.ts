@@ -44,9 +44,9 @@ class Contaminacao {
   chave: string;
 
   constructor(
-    local: Local,
-    praga: Praga,
-    data: Date,
+    local?: Local,
+    praga?: Praga,
+    data?: Date,
     acoes?: string,
     dataExterminio?: Date
   ) {
@@ -56,11 +56,11 @@ class Contaminacao {
     this.acoes = acoes ?? "";
     this.dataExterminio = dataExterminio ?? new Date(1900, 0, 1);
     this.chave = "".concat(
-      this.local.cep,
+      this.local?.cep,
       "-",
-      this.praga.codigo.toString(),
+      this.praga?.codigo.toString(),
       "-",
-      this.data.toString()
+      this.data?.toUTCString()
     );
   }
 }
@@ -150,9 +150,9 @@ function Reset() {
     new Contaminacao(
       Listas.LocalPorCEP("12345-678"),
       Listas.PragaPorCodigo(23),
-      new Date(2020, 2, 23),
+      new Date("2020-03-23"),
       "Fazer Pizza",
-      new Date(2022, 4, 19)
+      new Date("2022-04-19")
     )
   );
 }
@@ -166,15 +166,12 @@ function Teste() {
   console.log("Local Por CEP: ", loca);
   console.log("Praga Por Cod: ", prag);
 
-  const cont: Contaminacao = new Contaminacao(
-    loca,
-    prag,
-    new Date(2020, 2, 23)
+  const cont: Contaminacao = new Contaminacao(loca, prag, new Date("2020-03-23")
   );
 
   console.log("Contm Por Chave: ", Listas.ContmPorChave(cont.chave));
 
-  Listas.ContmPorChave(cont.chave).dataExterminio = new Date(2022, 9, 20);
+  Listas.ContmPorChave(cont.chave).dataExterminio = new Date("2022-10-20");
   console.log("Contm Update: ", Listas.ContmPorChave(cont.chave));
 
   console.table(Listas.ListaDeLocais);
@@ -183,12 +180,9 @@ function Teste() {
 }
 
 function ListarUmLocal() {
-  const place = document.getElementById("listar_um");
-  const child = document.getElementById("lista-um-child");
-  const cep = (document.getElementById("cep-lista-um") as HTMLInputElement)
-    .value;
-
-  // if (cep == "") return;
+  const place: HTMLElement = document.getElementById("listar_um");
+  const child: HTMLElement = document.getElementById("lista-um-child");
+  const cep: string = (document.getElementById("cep-lista-um") as HTMLInputElement).value;
 
   const local: Local = Listas.LocalPorCEP(cep);
 
@@ -349,12 +343,9 @@ function RemoverLocal() {
 }
 
 function ListarUmaPraga() {
-  const place = document.getElementById("listar_uma");
-  const child = document.getElementById("lista-uma-child");
-  const cod = (document.getElementById("cod-lista-uma") as HTMLInputElement)
-    .value;
-
-  // if (cod == "") return;
+  const place: HTMLElement = document.getElementById("listar_uma");
+  const child: HTMLElement = document.getElementById("lista-uma-child");
+  const cod: string = (document.getElementById("cod-lista-uma") as HTMLInputElement).value;
 
   const praga: Praga = Listas.PragaPorCodigo(+cod);
 
@@ -458,8 +449,7 @@ function RemoverPraga() {
   const place = document.getElementById("remover");
   const child = document.getElementById("lista-rem-child");
   const cchil = document.getElementById("rem-conf");
-  const cod = (document.getElementById("cod-praga-rem") as HTMLInputElement)
-    .value;
+  const cod = (document.getElementById("cod-praga-rem") as HTMLInputElement).value;
 
   if (cod == "") return;
 
@@ -520,27 +510,174 @@ function RemoverPraga() {
 }
 
 function ListarUmaContm() {
+  const place: HTMLElement = document.getElementById("listar_uma");
+  const child: HTMLElement = document.getElementById("lista-uma-child");
 
+  const cep: string = (document.getElementById("cep-lista-uma") as HTMLInputElement).value;
+  const cod: number = +(document.getElementById("cod-lista-uma") as HTMLInputElement).value;
+  const dat: Date = new Date((document.getElementById("dat-lista-uma") as HTMLInputElement).value);
+
+  const local: Local = Listas.LocalPorCEP(cep);
+  const praga: Praga = Listas.PragaPorCodigo(cod);
+
+  const aux: Contaminacao = new Contaminacao(local, praga, dat);
+  const contm: Contaminacao = Listas.ContmPorChave(aux.chave);
+
+  if(!contm) {
+    if (child) {
+      place?.removeChild(child);
+    }
+    return;
+  }
+
+  if (child) {
+    child.innerHTML = ContmToHTML(contm);
+    return;
+  }
+
+  const p = document.createElement("p");
+  p.setAttribute("id", "lista-uma-child");
+
+  p.innerHTML = ContmToHTML(contm);
+  place?.appendChild(p);
 }
 
-function ContmToHTML(contm: Contaminacao) {
-
+function ContmToHTML(contm: Contaminacao): string {
+  let str: string = "";
+  return str.concat(
+      "Local: ",
+      contm.local.cep,
+      "<br>Praga: ",
+      contm.praga.nome,
+      "<br>Data: ",
+      contm.data.toString(),
+      "<br>Ações: ",
+      contm.acoes,
+      "<br>Data de Extermínio: ",
+      contm.dataExterminio.toString()
+  );
 }
 
 function ListarTodasContms() {
+  const place: HTMLElement = document.getElementById("listar_todas");
+  const lista = Listas.ListaDeContms;
 
+  let index: string;
+
+  for (let i = 0; i < lista.length; i++) {
+    index = "lista-todos-child-".concat(i.toString());
+    if (document.getElementById(index)) break;
+
+    const p = document.createElement("p");
+    p.setAttribute("id", index);
+
+    p.innerHTML = ContmToHTML(lista[i]);
+    place?.appendChild(p);
+  }
 }
 
 function IncluirContm() {
+  const cep: string = (document.getElementById("cep-contm") as HTMLInputElement).value;
+  const cod: number = +(document.getElementById("cod-contm") as HTMLInputElement).value;
+  const dat: Date = new Date((document.getElementById("dat-contm") as HTMLInputElement).value);
+  const aco: string = (document.getElementById("aco-contm") as HTMLInputElement).value;
+  const datE: Date = new Date((document.getElementById("date-contm") as HTMLInputElement).value);
 
+  if (cep == "" || cod == 0 || !dat || aco == "" || !datE) return;
+
+  Listas.InsereContaminacao(new Contaminacao(Listas.LocalPorCEP(cep),
+                                             Listas.PragaPorCodigo(cod), dat, aco, datE));
 }
 
 function AlterarContm() {
+  const cep: string = (document.getElementById("cep-contm-e") as HTMLInputElement).value;
+  const cod: number = +(document.getElementById("cod-contm-e") as HTMLInputElement).value;
+  const dat: Date = new Date((document.getElementById("dat-contm-e") as HTMLInputElement).value);
+  const aco: string = (document.getElementById("aco-contm-e") as HTMLInputElement).value;
+  const datE: string = (document.getElementById("date-contm-e") as HTMLInputElement).value;
 
+  if (cep == "" || cod == 0 || !dat) return;
+
+  const contm: Contaminacao = Listas.ContmPorChave((new Contaminacao(Listas.LocalPorCEP(cep),
+                                                                     Listas.PragaPorCodigo(cod), dat).chave));
+
+  if (aco != "") {
+    contm.acoes = aco;
+  }
+
+  if (datE != "") {
+    contm.dataExterminio = new Date(datE);
+  }
+
+  localStorage.setItem("lista-contms", JSON.stringify(Listas.ListaDeContms));
 }
 
 function RemoverContm() {
+  const place: HTMLElement = document.getElementById("remover");
+  const child: HTMLElement = document.getElementById("list-rem-child");
+  const cchil: HTMLElement = document.getElementById("rem-conf");
 
+  const cep: string = (document.getElementById("cep-contm-rem") as HTMLInputElement).value;
+  const cod: number = +(document.getElementById("cod-contm-rem") as HTMLInputElement).value;
+  const dat: Date = new Date((document.getElementById("dat-contm-rem") as HTMLInputElement).value);
+
+  if (cep == "" || cod == 0 || !dat) return;
+
+  const contm: Contaminacao = Listas.ContmPorChave((new Contaminacao(Listas.LocalPorCEP(cep),
+                                                                     Listas.PragaPorCodigo(cod), dat).chave));
+
+  if (!contm) {
+    if (child) {
+      place?.removeChild(child);
+      place?.removeChild(cchil);
+    }
+    return;
+  }
+
+  if (child) {
+    child.innerHTML = ContmToHTML(contm);
+    return;
+  }
+
+  const p = document.createElement("p");
+  p.setAttribute("id", "lista-rem-child");
+
+  p.innerHTML = ContmToHTML(contm);
+  place?.appendChild(p);
+
+  const c = document.createElement("p");
+  c.setAttribute("id", "rem-conf");
+
+  c.innerHTML = "Tem certeza?";
+  place?.append(c);
+
+  const botaoSim = document.createElement("button");
+  const botaoNao = document.createElement("button");
+
+  botaoSim.innerHTML = "Sim";
+  botaoSim.onclick = () => {
+    Listas.RemoveContm(Listas.ContmPorChave(contm.chave));
+    const d = document.createElement("p");
+
+    d.innerHTML = "Removido!";
+    place?.append(d);
+
+    setTimeout(() => {
+      place?.removeChild(d);
+      botaoNao.click();
+    }, 3500);
+  };
+
+  botaoNao.innerHTML = "Não";
+  botaoNao.onclick = () => {
+    place?.removeChild(p);
+    place?.removeChild(c);
+    place?.removeChild(botaoSim);
+    place?.removeChild(botaoNao);
+  };
+
+  place?.append(botaoSim);
+  place?.append(botaoNao);
 }
 
 function DoencasEtPragas(n: number) {

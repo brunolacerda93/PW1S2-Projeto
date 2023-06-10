@@ -38,29 +38,29 @@ class Praga {
 class Contaminacao {
   local: Local;
   praga: Praga;
-  data: Date;
+  data: string;
   acoes: string;
-  dataExterminio: Date;
+  dataExterminio: string;
   chave: string;
 
   constructor(
     local?: Local,
     praga?: Praga,
-    data?: Date,
+    data?: string,
     acoes?: string,
-    dataExterminio?: Date
+    dataExterminio?: string
   ) {
     this.local = local;
     this.praga = praga;
     this.data = data;
     this.acoes = acoes ?? "";
-    this.dataExterminio = dataExterminio ?? new Date(1900, 0, 1);
+    this.dataExterminio = dataExterminio ?? new Date(1900, 0, 1).toUTCString();
     this.chave = "".concat(
       this.local?.cep,
       "-",
       this.praga?.codigo.toString(),
       "-",
-      this.data?.toUTCString()
+      this.data
     );
   }
 }
@@ -150,9 +150,9 @@ function Reset() {
     new Contaminacao(
       Listas.LocalPorCEP("12345-678"),
       Listas.PragaPorCodigo(23),
-      new Date("2020-03-23"),
+      new Date("2020-03-23").toUTCString(),
       "Fazer Pizza",
-      new Date("2022-04-19")
+      new Date("2022-04-19").toUTCString()
     )
   );
 }
@@ -166,12 +166,11 @@ function Teste() {
   console.log("Local Por CEP: ", loca);
   console.log("Praga Por Cod: ", prag);
 
-  const cont: Contaminacao = new Contaminacao(loca, prag, new Date("2020-03-23")
-  );
+  const cont: Contaminacao = new Contaminacao(loca, prag, new Date("2020-03-23").toUTCString());
 
   console.log("Contm Por Chave: ", Listas.ContmPorChave(cont.chave));
 
-  Listas.ContmPorChave(cont.chave).dataExterminio = new Date("2022-10-20");
+  Listas.ContmPorChave(cont.chave).dataExterminio = new Date("2022-10-20").toUTCString();
   console.log("Contm Update: ", Listas.ContmPorChave(cont.chave));
 
   console.table(Listas.ListaDeLocais);
@@ -511,17 +510,16 @@ function RemoverPraga() {
 
 function ListarUmaContm() {
   const place: HTMLElement = document.getElementById("listar_uma");
-  const child: HTMLElement = document.getElementById("lista-uma-child");
 
   const cep: string = (document.getElementById("cep-lista-uma") as HTMLInputElement).value;
   const cod: number = +(document.getElementById("cod-lista-uma") as HTMLInputElement).value;
-  const dat: Date = new Date((document.getElementById("dat-lista-uma") as HTMLInputElement).value);
-
+  const dat: string = new Date((document.getElementById("dat-lista-uma") as HTMLInputElement).value).toUTCString();
+  
   const local: Local = Listas.LocalPorCEP(cep);
   const praga: Praga = Listas.PragaPorCodigo(cod);
-
-  const aux: Contaminacao = new Contaminacao(local, praga, dat);
-  const contm: Contaminacao = Listas.ContmPorChave(aux.chave);
+  
+  const contm: Contaminacao = Listas.ContmPorChave((new Contaminacao(local, praga, dat)).chave);
+  let child: HTMLElement = document.getElementById("lista-uma-child");
 
   if(!contm) {
     if (child) {
@@ -535,11 +533,11 @@ function ListarUmaContm() {
     return;
   }
 
-  const p = document.createElement("p");
-  p.setAttribute("id", "lista-uma-child");
-
-  p.innerHTML = ContmToHTML(contm);
-  place?.appendChild(p);
+  child = document.createElement("p");
+  child.setAttribute("id", "lista-uma-child");
+  child.innerHTML = ContmToHTML(contm);
+  
+  place?.appendChild(child);
 }
 
 function ContmToHTML(contm: Contaminacao): string {
@@ -550,38 +548,39 @@ function ContmToHTML(contm: Contaminacao): string {
       "<br>Praga: ",
       contm.praga.nome,
       "<br>Data: ",
-      contm.data.toString(),
+      contm.data,
       "<br>Ações: ",
       contm.acoes,
       "<br>Data de Extermínio: ",
-      contm.dataExterminio.toString()
+      contm.dataExterminio
   );
 }
 
 function ListarTodasContms() {
+  const div: HTMLElement = document.createElement("div");
   const place: HTMLElement = document.getElementById("listar_todas");
   const lista = Listas.ListaDeContms;
 
-  let index: string;
-
   for (let i = 0; i < lista.length; i++) {
-    index = "lista-todos-child-".concat(i.toString());
+    let index: string = "lista-todos-child-".concat(i.toString());
     if (document.getElementById(index)) break;
 
     const p = document.createElement("p");
     p.setAttribute("id", index);
 
     p.innerHTML = ContmToHTML(lista[i]);
-    place?.appendChild(p);
+    div.appendChild(p);
   }
+
+  place?.appendChild(div);
 }
 
 function IncluirContm() {
   const cep: string = (document.getElementById("cep-contm") as HTMLInputElement).value;
   const cod: number = +(document.getElementById("cod-contm") as HTMLInputElement).value;
-  const dat: Date = new Date((document.getElementById("dat-contm") as HTMLInputElement).value);
+  const dat: string = new Date((document.getElementById("dat-contm") as HTMLInputElement).value).toUTCString();
   const aco: string = (document.getElementById("aco-contm") as HTMLInputElement).value;
-  const datE: Date = new Date((document.getElementById("date-contm") as HTMLInputElement).value);
+  const datE: string = new Date((document.getElementById("date-contm") as HTMLInputElement).value).toUTCString();
 
   if (cep == "" || cod == 0 || !dat || aco == "" || !datE) return;
 
@@ -592,7 +591,7 @@ function IncluirContm() {
 function AlterarContm() {
   const cep: string = (document.getElementById("cep-contm-e") as HTMLInputElement).value;
   const cod: number = +(document.getElementById("cod-contm-e") as HTMLInputElement).value;
-  const dat: Date = new Date((document.getElementById("dat-contm-e") as HTMLInputElement).value);
+  const dat: string = new Date((document.getElementById("dat-contm-e") as HTMLInputElement).value).toUTCString();
   const aco: string = (document.getElementById("aco-contm-e") as HTMLInputElement).value;
   const datE: string = (document.getElementById("date-contm-e") as HTMLInputElement).value;
 
@@ -606,30 +605,27 @@ function AlterarContm() {
   }
 
   if (datE != "") {
-    contm.dataExterminio = new Date(datE);
+    contm.dataExterminio = new Date(datE).toUTCString();
   }
 
   localStorage.setItem("lista-contms", JSON.stringify(Listas.ListaDeContms));
 }
 
-function RemoverContm() {
-  const place: HTMLElement = document.getElementById("remover");
-  const child: HTMLElement = document.getElementById("list-rem-child");
-  const cchil: HTMLElement = document.getElementById("rem-conf");
-
+function RemoverContm() {  
   const cep: string = (document.getElementById("cep-contm-rem") as HTMLInputElement).value;
   const cod: number = +(document.getElementById("cod-contm-rem") as HTMLInputElement).value;
-  const dat: Date = new Date((document.getElementById("dat-contm-rem") as HTMLInputElement).value);
-
+  const dat: string = new Date((document.getElementById("dat-contm-rem") as HTMLInputElement).value).toUTCString();
+  
   if (cep == "" || cod == 0 || !dat) return;
-
-  const contm: Contaminacao = Listas.ContmPorChave((new Contaminacao(Listas.LocalPorCEP(cep),
-                                                                     Listas.PragaPorCodigo(cod), dat).chave));
+  
+  const place: HTMLElement = document.getElementById("remover");
+  const contm: Contaminacao = Listas.ContmPorChave((new Contaminacao(Listas.LocalPorCEP(cep), Listas.PragaPorCodigo(cod), dat).chave));
+  
+  let child: HTMLElement = document.getElementById("list-rem-child");
 
   if (!contm) {
     if (child) {
       place?.removeChild(child);
-      place?.removeChild(cchil);
     }
     return;
   }
@@ -639,61 +635,74 @@ function RemoverContm() {
     return;
   }
 
+  child = document.createElement("div");
+  child.setAttribute("id", "lista-rem-child");
+
   const p = document.createElement("p");
-  p.setAttribute("id", "lista-rem-child");
-
+  const c = document.createElement("h3");
+  
   p.innerHTML = ContmToHTML(contm);
-  place?.appendChild(p);
-
-  const c = document.createElement("p");
-  c.setAttribute("id", "rem-conf");
-
   c.innerHTML = "Tem certeza?";
-  place?.append(c);
+  
+  child.appendChild(p);
+  child.appendChild(c);
 
   const botaoSim = document.createElement("button");
   const botaoNao = document.createElement("button");
 
   botaoSim.innerHTML = "Sim";
+  botaoNao.innerHTML = "Não";
+  
   botaoSim.onclick = () => {
     Listas.RemoveContm(Listas.ContmPorChave(contm.chave));
-    const d = document.createElement("p");
-
+    const d = document.createElement("h3");
+    
     d.innerHTML = "Removido!";
-    place?.append(d);
-
+    child.appendChild(d);
+    
     setTimeout(() => {
-      place?.removeChild(d);
       botaoNao.click();
     }, 3500);
   };
-
-  botaoNao.innerHTML = "Não";
+  
   botaoNao.onclick = () => {
-    place?.removeChild(p);
-    place?.removeChild(c);
-    place?.removeChild(botaoSim);
-    place?.removeChild(botaoNao);
+    place?.removeChild(child);
   };
 
-  place?.append(botaoSim);
-  place?.append(botaoNao);
+  child.appendChild(botaoSim);
+  child.appendChild(botaoNao);
+
+  place?.appendChild(child);
 }
 
 function DoencasEtPragas() {
   const n: number = +(document.getElementById("relat-num") as HTMLInputElement).value;
   const lista = Listas.ListaDePragas;
 
+  if (document.getElementById("relat-1-child")) return;
+
   for (let i = 0; i < lista.length; i++) {
     if (lista[i].doencasTransmitidas.length > n) {
-      console.log(lista[i]);
-      // TODO: Exibir detalhes!
+      Cegonha("relat-1", PragaToHTML(lista[i]));
     }
   }
 }
 
+function Cegonha(relat: string, texto: string) {
+  const child = document.createElement("p");
+
+  child.setAttribute("id", relat+"-child");
+  child.innerHTML = texto;
+
+  const place = document.getElementById(relat);
+  place?.appendChild(child);
+}
+
 function PragasEtDoencas() {
   const doe: string = (document.getElementById("relat-doe") as HTMLInputElement).value;
+
+  if (doe == "") return;
+
   const listaPrag = Listas.ListaDePragas;
   const lista = [];
 
@@ -708,11 +717,16 @@ function PragasEtDoencas() {
     }
   }
 
-  console.table(lista);
-  // TODO: Exibir detalhes!
+  if (document.getElementById("relat-2-child")) return;
+
+  for (let i = 0; i < lista.length; i++) {
+    Cegonha("relat-2", PragaToHTML(lista[i]));
+  }
 }
 
 function ContmsEtDatas() {
+  if (document.getElementById("relat-3-child")) return;
+
   const data_ini: number = new Date("2019-01-01").valueOf();
   const data_fim: number = new Date("2019-03-31").valueOf();
   const lista = Listas.ListaDeContms;
@@ -721,9 +735,10 @@ function ContmsEtDatas() {
     let data_contm: number = new Date(lista[i].data).valueOf();
 
     if (data_contm >= data_ini && data_contm <= data_fim) {
-      console.log(lista[i].local);
-      console.log(lista[i].praga);
-      // TODO: Exibir detalhes!
+      let info = "<h3>Contaminação " + i + "</h3>";
+
+      Cegonha("relat-3", info + LocalToHTML(lista[i].local));
+      Cegonha("relat-3", PragaToHTML(lista[i].praga));
     }
   }
 }
